@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Congress Report Card</title>
+  <meta name="description" content="Letter grades for every U.S. Representative and Senator based on vote attendance and legislative work in the current Congress.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap">
+      <p class="eyebrow" id="congress-label">119th Congress</p>
+      <h1>Congress Report Card</h1>
+      <p class="lede">How often does your representative show up to vote, and how much legislation do they write and support? Each grade comes only from the public record.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="notice" class="notice" hidden></div>
+
+    <section class="controls" aria-label="Filters">
+      <input id="q" type="search" placeholder="Search by name or state…" aria-label="Search">
+      <select id="chamber" aria-label="Chamber">
+        <option value="">Both chambers</option>
+        <option>House</option>
+        <option>Senate</option>
+      </select>
+      <select id="state" aria-label="State"><option value="">All states</option></select>
+      <select id="party" aria-label="Party">
+        <option value="">All parties</option>
+        <option>Democrat</option>
+        <option>Republican</option>
+        <option>Independent</option>
+      </select>
+      <select id="sort" aria-label="Sort">
+        <option value="grade">Sort: highest grade</option>
+        <option value="grade-asc">Sort: lowest grade</option>
+        <option value="attendance-asc">Sort: most votes missed</option>
+        <option value="name">Sort: name</option>
+      </select>
+      <button id="weights-btn" class="ghost" aria-expanded="false" aria-controls="weights">Adjust grading</button>
+    </section>
+
+    <section id="weights" class="weights" hidden aria-label="Grading weights">
+      <p>The grade is a weighted average of three scores. Change the weights to match what matters to you.</p>
+      <div class="sliders"></div>
+      <button id="reset-weights" class="ghost small">Reset to defaults</button>
+    </section>
+
+    <section class="summary" id="summary" aria-label="Grade distribution"></section>
+
+    <p class="count" id="count"></p>
+    <section id="grid" class="grid" aria-live="polite"></section>
+
+    <section class="method" id="methodology">
+      <h2>How grades are calculated</h2>
+      <div class="method-grid">
+        <div>
+          <h3>Vote attendance</h3>
+          <p>This is the share of roll-call votes the member cast while in office. Voting "present" counts as attending. 100% attendance scores 100 points and 85% or lower scores 0, on a straight line in between. By custom the Speaker of the House votes only occasionally, so the votes they skip as Speaker aren't counted against them. Delegates from DC and the territories are counted only on the votes they are allowed to cast.</p>
+        </div>
+        <div>
+          <h3>Bills written</h3>
+          <p>Bills and joint resolutions the member sponsored, with points for how far each one got: introduced (1), acted on in committee (3), passed a chamber (6), became law (10). The member is ranked against their own chamber: the top member scores 100, the chamber average scores 75 (a C) and the lowest scores 50. Simple resolutions, such as commemorations, don't count.</p>
+        </div>
+        <div>
+          <h3>Bills supported</h3>
+          <p>The number of bills and joint resolutions the member cosponsored, ranked within their chamber the same way: 100 for the top member, 75 for the average, 50 for the lowest.</p>
+        </div>
+        <div>
+          <h3>Letter grade</h3>
+          <p>A ≥ 93, A− ≥ 90, B+ ≥ 87, B ≥ 83, B− ≥ 80, and so on down to F below 60. A member who joined partway through the Congress gets a <em>partial term</em> label. Their bill counts cover less time, so read those grades with care.</p>
+        </div>
+      </div>
+      <p class="sources">Data: rosters from <a href="https://github.com/unitedstates/congress-legislators">congress-legislators</a>, roll-call votes from <a href="https://voteview.com">Voteview</a>, legislation from <a href="https://api.congress.gov">Congress.gov</a>. Bill progress is inferred from each bill's latest action. <span id="generated"></span></p>
+    </section>
+  </main>
+
+  <dialog id="card" aria-labelledby="card-name">
+    <div class="card-body"></div>
+  </dialog>
+
+  <script src="data/members.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
