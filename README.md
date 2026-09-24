@@ -39,7 +39,13 @@ python -m http.server 8000 --directory site
 ```
 
 The site is published with GitHub Pages: `.github/workflows/pages.yml` deploys `site/` on every
-push to `main`. To update the grades, rerun `build_data.py`, then commit and push `site/data/members.js`.
+push to `main`.
+
+The data refreshes automatically: `.github/workflows/update-data.yml` runs every night at
+09:00 UTC, rebuilds `site/data/members.js` using the `CONGRESS_API_KEY` repository secret, commits
+it and redeploys the site. It can also be run by hand from the repo's **Actions** tab
+(**Nightly data update → Run workflow**). If more than 5% of members fail to load, the build stops
+and the site keeps the previous day's data.
 
 ## Data sources
 

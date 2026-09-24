@@ -33,6 +33,8 @@ from pathlib import Path
 CONGRESS = 119
 ROOT = Path(__file__).parent
 CACHE = ROOT / ".cache"
+CACHE_MAX_AGE = 20 * 3600  # seconds; lets an interrupted run resume, but each day's build is fresh
+MAX_FAILURE_RATE = 0.05    # refuse to write output if more members than this fail to load
 OUT = ROOT / "site" / "data" / "members.js"
 
 LEGISLATORS_URL = "https://unitedstates.github.io/congress-legislators/legislators-current.json"
@@ -71,7 +73,7 @@ def fetch(url, retries=4):
 
 def cached_json(key, url):
     path = CACHE / f"{key}.json"
-    if path.exists():
+    if path.exists() and time.time() - path.stat().st_mtime < CACHE_MAX_AGE:
         try:
             return json.loads(path.read_text(encoding="utf-8"))
         except ValueError:
@@ -250,6 +252,10 @@ def main():
             for m, err in zip(todo, pool.map(work, todo)):
                 done += 1
                 print(f"  [{done}/{len(todo)}] bills: {m['name']}" + (f"  FAILED: {err}" if err else ""))
+
+        failed = sum(1 for m in todo if m["bills"] is None)
+        if failed > len(todo) * MAX_FAILURE_RATE:
+            sys.exit(f"{failed} of {len(todo)} members failed to load; not writing {OUT.name}")
 
     payload = {
         "congress": CONGRESS,

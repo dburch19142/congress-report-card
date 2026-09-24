@@ -5,6 +5,7 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  workflow_call:   # used by update-data.yml after the nightly data commit
 
 permissions:
   contents: read
@@ -23,6 +24,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main   # latest main, including a data commit made earlier in the same run
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
