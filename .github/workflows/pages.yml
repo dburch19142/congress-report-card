@@ -1,4 +1,4 @@
-# Publishes site/ to GitHub Pages on every push to main.
+# Publishes site/ to GitHub Pages on every push to main, then smoke-tests the live site.
 name: Deploy site to GitHub Pages
 
 on:
@@ -29,3 +29,9 @@ jobs:
           path: site
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  smoke-tests:
+    needs: deploy
+    permissions:
+      contents: read
+    uses: ./.github/workflows/smoke-tests.yml

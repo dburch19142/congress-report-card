@@ -1,0 +1,2396 @@
+{
+  "id": "03d8dd13-80c2-49b7-a561-04a9edf11150",
+  "version": "2.0",
+  "name": "Congress Report Card",
+  "url": "https://congressreportcard.org",
+  "tests": [
+    {
+      "id": "f8184995-debc-4da8-9b27-34a5d1427dcd",
+      "name": "01 Home page loads",
+      "commands": [
+        {
+          "id": "205d4161-890a-4497-9e39-c4bab284e51d",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "735c3a6c-7ee6-4eff-986e-20e1af76bf43",
+          "comment": "Start from the default grading weights",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "ed1c26a7-1ba6-46e3-a436-7f08000bf6b4",
+          "comment": "",
+          "command": "open",
+          "target": "/?fresh",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "c3898ce1-25d5-478a-8104-84bc907f8203",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "66422769-f534-4510-89c6-aac64fd926ac",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "total"
+        },
+        {
+          "id": "734513e9-c2d6-4a1d-a5c6-1b7c097f3e5e",
+          "comment": "",
+          "command": "assertTitle",
+          "target": "Congress Report Card",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "35773320-eeea-4906-8204-b4d04a3e0029",
+          "comment": "",
+          "command": "assertText",
+          "target": "css=h1",
+          "targets": [],
+          "value": "Congress Report Card"
+        },
+        {
+          "id": "c6c7c788-8dc0-428b-826c-dd77137db2dc",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "id=congress-label",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "30f357cf-d901-413f-bde6-650799116d62",
+          "comment": "Every member is listed by default",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${total} of ${total} members"
+        },
+        {
+          "id": "e1bdd473-76cf-47a3-9107-e72118da0924",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return document.querySelectorAll('#grid .member').length",
+          "targets": [],
+          "value": "cards"
+        },
+        {
+          "id": "e088856f-b5e9-4cd2-aa3b-e9755a4a5086",
+          "comment": "",
+          "command": "assert",
+          "target": "cards",
+          "targets": [],
+          "value": "${total}"
+        },
+        {
+          "id": "8e409ebb-657b-4fa6-88de-39c2056d6be5",
+          "comment": "",
+          "command": "assertSelectedLabel",
+          "target": "id=chamber",
+          "targets": [],
+          "value": "Both chambers"
+        },
+        {
+          "id": "1b89d098-c2cd-4218-9d83-0da450bc7795",
+          "comment": "",
+          "command": "assertSelectedLabel",
+          "target": "id=state",
+          "targets": [],
+          "value": "All states"
+        },
+        {
+          "id": "5944233e-1016-4a4e-8818-054e1022905f",
+          "comment": "",
+          "command": "assertSelectedLabel",
+          "target": "id=party",
+          "targets": [],
+          "value": "All parties"
+        },
+        {
+          "id": "97a159ae-2962-49a9-ab7e-009b3a61bd30",
+          "comment": "",
+          "command": "assertSelectedLabel",
+          "target": "id=sort",
+          "targets": [],
+          "value": "Sort: highest grade"
+        },
+        {
+          "id": "9d1ebcf1-1534-4ca4-88f6-792199120ffa",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=#summary button[data-g='A']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "813ef103-76ea-4ec9-8961-60097dcc23a4",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=#summary button[data-g='B']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "74482de2-628a-45bf-8cf8-f3d964bd9b1c",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=#summary button[data-g='C']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "bed75a2d-9675-42de-80e5-7211174b20ec",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=#summary button[data-g='D']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "5f1ea3f9-4d30-4885-a90a-ced9edbd45e0",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=#summary button[data-g='F']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "cdac411b-cace-4a7b-981c-08c08e36fa6f",
+          "comment": "Bill data is loaded, so the warning is hidden",
+          "command": "executeScript",
+          "target": "return document.getElementById('notice').hidden",
+          "targets": [],
+          "value": "noticeHidden"
+        },
+        {
+          "id": "a932af5b-9e81-492e-91dd-4bb00b70131c",
+          "comment": "",
+          "command": "assert",
+          "target": "noticeHidden",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "413591c8-c42b-4bc6-b65b-faa5b40bf97c",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return document.querySelectorAll('#state option').length - 1",
+          "targets": [],
+          "value": "stateOptions"
+        },
+        {
+          "id": "692203c5-49e2-4a27-928e-0377f5b3792f",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return new Set(window.REPORT_DATA.members.map(m => m.state)).size",
+          "targets": [],
+          "value": "stateCount"
+        },
+        {
+          "id": "4dc73a31-aa54-41aa-9f78-a6c288d3c836",
+          "comment": "State list has one entry per state/territory",
+          "command": "assert",
+          "target": "stateOptions",
+          "targets": [],
+          "value": "${stateCount}"
+        }
+      ]
+    },
+    {
+      "id": "7bc1d3f4-a628-4b7b-bdb9-97ebfd1a9b87",
+      "name": "02 Search by name and state",
+      "commands": [
+        {
+          "id": "3bb3cfa3-f76c-4441-b2e6-4e71c0571013",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "8c9d1e8d-6a4c-44c3-b8cd-b81aef3ac924",
+          "comment": "Start from the default grading weights",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "2169d06c-52fc-40e7-a5ff-476c5737f4ae",
+          "comment": "",
+          "command": "open",
+          "target": "/?fresh",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "fa4129fa-5d5b-4e78-a9c9-9b25921abdb8",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "3d2290b5-b39f-49ef-9ba0-8a56e23d8cf0",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "total"
+        },
+        {
+          "id": "e69e5cd4-f71e-436a-a00b-b3f9bb65798e",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.find(m => m.chamber === 'Senate').name",
+          "targets": [],
+          "value": "senator"
+        },
+        {
+          "id": "6d0e6441-bbf7-4946-a2c5-06a6e6624a85",
+          "comment": "",
+          "command": "type",
+          "target": "id=q",
+          "targets": [],
+          "value": "${senator}"
+        },
+        {
+          "id": "a4a83733-4cc0-4ed8-869c-aaa6ffa6cce1",
+          "comment": "",
+          "command": "assertText",
+          "target": "css=#grid .member:first-child .name",
+          "targets": [],
+          "value": "${senator}"
+        },
+        {
+          "id": "73caed1e-2721-45dd-8d5f-752b4a739514",
+          "comment": "",
+          "command": "executeScript",
+          "target": "const q = document.getElementById('q').value.toLowerCase(); return window.REPORT_DATA.members.filter(m => m.name.toLowerCase().includes(q)).length",
+          "targets": [],
+          "value": "matches"
+        },
+        {
+          "id": "5306d22f-10a2-4386-9e4d-4bb059d225b6",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${matches} of ${total} members"
+        },
+        {
+          "id": "336d285b-18a3-4516-a240-1e30aff74f2c",
+          "comment": "",
+          "command": "type",
+          "target": "id=q",
+          "targets": [],
+          "value": "Ohio"
+        },
+        {
+          "id": "8ddabe69-e82a-46d2-9f25-6a3e6958c560",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.filter(m => m.state === 'OH' || m.name.toLowerCase().includes('ohio')).length",
+          "targets": [],
+          "value": "ohio"
+        },
+        {
+          "id": "e5bed73d-cd29-4b63-8928-7851b9b00888",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${ohio} of ${total} members"
+        },
+        {
+          "id": "071b3e8f-f97f-47a4-a708-b4ed84630a12",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return [...document.querySelectorAll('#grid .member')].every(e => e.textContent.includes('· OH'))",
+          "targets": [],
+          "value": "allOhio"
+        },
+        {
+          "id": "71058f00-5f5b-474a-a1ea-b0ebffccacd8",
+          "comment": "",
+          "command": "assert",
+          "target": "allOhio",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "850d235c-8624-4e52-81e3-f4a1a2654a19",
+          "comment": "",
+          "command": "type",
+          "target": "id=q",
+          "targets": [],
+          "value": "zzqqxxnomatch"
+        },
+        {
+          "id": "5285635e-bce4-4d65-b8c4-264478085df9",
+          "comment": "Nonsense search returns nothing",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "0 of ${total} members"
+        },
+        {
+          "id": "76671ae9-9a03-45e9-9025-9fea7dd45200",
+          "comment": "",
+          "command": "assertElementNotPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "f109239f-0f8f-41bc-99d0-7f5227905ded",
+          "comment": "Clear the search box",
+          "command": "runScript",
+          "target": "const q = document.getElementById('q'); q.value = ''; q.dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "8e8e4e7e-10fd-4378-99e9-9c676e58a6a6",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${total} of ${total} members"
+        }
+      ]
+    },
+    {
+      "id": "444c95bd-f7d3-42ef-a1d3-755913d311b3",
+      "name": "03 Chamber, state and party filters",
+      "commands": [
+        {
+          "id": "70e01bb4-2b35-4344-b719-71522ccb5051",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "596c5a71-01e5-48a0-8b49-09ab6ea2fcaa",
+          "comment": "Start from the default grading weights",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "9f137596-7b00-4a28-9872-85fbf8ea9337",
+          "comment": "",
+          "command": "open",
+          "target": "/?fresh",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "359905ce-7d04-46cc-b856-f1b07a325689",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "ffbac84d-2081-4e38-95b0-cc9623797eb6",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "total"
+        },
+        {
+          "id": "7d62a0ce-6994-45d6-93da-5313df48db78",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.filter(m => m.chamber === 'Senate').length",
+          "targets": [],
+          "value": "senators"
+        },
+        {
+          "id": "ecee8231-3ce6-4be9-b10b-02f70ae8500e",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.filter(m => m.chamber === 'House').length",
+          "targets": [],
+          "value": "reps"
+        },
+        {
+          "id": "5423b133-b6f5-4e66-8149-c7b421f291db",
+          "comment": "",
+          "command": "select",
+          "target": "id=chamber",
+          "targets": [],
+          "value": "label=Senate"
+        },
+        {
+          "id": "3d7885f0-48a9-4933-b91f-96a280e23f2c",
+          "comment": "",
+          "command": "runScript",
+          "target": "document.getElementById('chamber').dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "103f03a9-c55c-4f81-bb9b-a67b262a12e0",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${senators} of ${total} members"
+        },
+        {
+          "id": "18ac070a-67b8-41c8-acd9-63ee25fcf07f",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return [...document.querySelectorAll('#grid .member')].every(e => e.textContent.includes('Senator ·'))",
+          "targets": [],
+          "value": "allSenators"
+        },
+        {
+          "id": "7de4622d-bd2b-4ae0-b24f-12f3b58ab74b",
+          "comment": "",
+          "command": "assert",
+          "target": "allSenators",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "b76318d6-c3e6-4cbd-ac52-e4f0ad407620",
+          "comment": "",
+          "command": "select",
+          "target": "id=chamber",
+          "targets": [],
+          "value": "label=House"
+        },
+        {
+          "id": "0f969fee-8167-403b-808e-29d080d6d674",
+          "comment": "",
+          "command": "runScript",
+          "target": "document.getElementById('chamber').dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "b61c21db-f4d2-4aae-8b19-16dfcc42d205",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${reps} of ${total} members"
+        },
+        {
+          "id": "5e4dafe5-4d63-41a4-80ec-162e2000bc6f",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return [...document.querySelectorAll('#grid .member')].every(e => !e.textContent.includes('Senator ·'))",
+          "targets": [],
+          "value": "noSenators"
+        },
+        {
+          "id": "f8037239-478f-4083-b8ac-8f3381fc620c",
+          "comment": "",
+          "command": "assert",
+          "target": "noSenators",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "4451a63a-600a-4ad7-9ad5-121700e25ac7",
+          "comment": "",
+          "command": "select",
+          "target": "id=chamber",
+          "targets": [],
+          "value": "label=Both chambers"
+        },
+        {
+          "id": "8fd69d4a-a1a0-44ca-8bc5-9e459590d618",
+          "comment": "",
+          "command": "runScript",
+          "target": "document.getElementById('chamber').dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "3e00e9e8-0128-4840-a7a8-232da3065566",
+          "comment": "",
+          "command": "select",
+          "target": "id=state",
+          "targets": [],
+          "value": "label=Ohio"
+        },
+        {
+          "id": "6428d8ef-bde0-4d56-90a1-8e7ac82afd91",
+          "comment": "",
+          "command": "runScript",
+          "target": "document.getElementById('state').dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "d6088162-6f3a-4cfe-a7f7-d2b0516123cd",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.filter(m => m.state === 'OH').length",
+          "targets": [],
+          "value": "ohio"
+        },
+        {
+          "id": "2c350436-8aa9-460b-879d-8f27a4d38711",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${ohio} of ${total} members"
+        },
+        {
+          "id": "09436629-f45d-43c9-ad1d-754cb3872a01",
+          "comment": "",
+          "command": "select",
+          "target": "id=state",
+          "targets": [],
+          "value": "label=All states"
+        },
+        {
+          "id": "a79bf517-400c-4384-a91f-c67b829ae48e",
+          "comment": "",
+          "command": "runScript",
+          "target": "document.getElementById('state').dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "d5e42924-6103-4ea1-93de-c09bbe767d91",
+          "comment": "",
+          "command": "select",
+          "target": "id=party",
+          "targets": [],
+          "value": "label=Independent"
+        },
+        {
+          "id": "04a634e1-a89d-45d9-9698-cfceaa282928",
+          "comment": "",
+          "command": "runScript",
+          "target": "document.getElementById('party').dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "7d41be3b-4ff1-40d5-a81e-2808533654af",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.filter(m => m.party === 'Independent').length",
+          "targets": [],
+          "value": "indies"
+        },
+        {
+          "id": "eb129aaa-d55e-40c5-bd74-f3455771174e",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${indies} of ${total} members"
+        },
+        {
+          "id": "d9ab60ad-984d-4777-b2c1-c721fb95d970",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return [...document.querySelectorAll('#grid .member')].every(e => e.querySelector('.party-I') !== null)",
+          "targets": [],
+          "value": "allIndies"
+        },
+        {
+          "id": "c9d16ea4-e508-4581-acfe-db830a5b2092",
+          "comment": "",
+          "command": "assert",
+          "target": "allIndies",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "b65bf375-83d3-465f-b1cf-d366f73454b3",
+          "comment": "",
+          "command": "select",
+          "target": "id=party",
+          "targets": [],
+          "value": "label=Republican"
+        },
+        {
+          "id": "823a2058-898e-4e0e-8965-b5f33252141f",
+          "comment": "",
+          "command": "runScript",
+          "target": "document.getElementById('party').dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "b15fe571-4466-45e5-b7e7-c45a37ebd832",
+          "comment": "",
+          "command": "select",
+          "target": "id=chamber",
+          "targets": [],
+          "value": "label=Senate"
+        },
+        {
+          "id": "c5e4f539-c987-4373-bc4a-f059a98de296",
+          "comment": "",
+          "command": "runScript",
+          "target": "document.getElementById('chamber').dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "5489f490-5070-4e71-b795-7bb95be506f3",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.filter(m => m.party === 'Republican' && m.chamber === 'Senate').length",
+          "targets": [],
+          "value": "gopSenators"
+        },
+        {
+          "id": "b4bd6e58-3a05-419e-8a81-1fd4a29c79ec",
+          "comment": "Filters combine",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${gopSenators} of ${total} members"
+        }
+      ]
+    },
+    {
+      "id": "8ce386a6-8c2a-4e37-93d7-5ead0c5355bc",
+      "name": "04 Sort orders",
+      "commands": [
+        {
+          "id": "257c4706-38ae-4905-a168-116f88df0b05",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "1384cf2c-c56e-4a27-b516-35b5cbbc1bd6",
+          "comment": "Start from the default grading weights",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "8cccdc0e-6911-4def-8290-2c5ae611a7a3",
+          "comment": "",
+          "command": "open",
+          "target": "/?fresh",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "18d5cfbe-b73e-42f3-aebf-9fc109d58961",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "475127d6-fff2-4791-86a7-7d06c0acf8ad",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "total"
+        },
+        {
+          "id": "fb727d8a-996d-4494-b12b-641cb473d8b7",
+          "comment": "Default sort: best grade first",
+          "command": "executeScript",
+          "target": "const o=['A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F','—']; const g=[...document.querySelectorAll('#grid .member .grade')].map(e=>o.indexOf(e.textContent.trim())); return g.length>1 && g.every((v,i)=>i===0||g[i-1]<=v)",
+          "targets": [],
+          "value": "desc"
+        },
+        {
+          "id": "ac77903c-349d-401c-9089-f7bd87b6d037",
+          "comment": "",
+          "command": "assert",
+          "target": "desc",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "60e4ef14-0abc-47f9-9552-53039cf3dc59",
+          "comment": "",
+          "command": "select",
+          "target": "id=sort",
+          "targets": [],
+          "value": "label=Sort: lowest grade"
+        },
+        {
+          "id": "c8e14d51-9e6e-4454-888b-0e588bd62328",
+          "comment": "",
+          "command": "runScript",
+          "target": "document.getElementById('sort').dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "51c66535-eb26-4fea-84b7-835e0a7a8941",
+          "comment": "",
+          "command": "executeScript",
+          "target": "const o=['A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F','—']; const g=[...document.querySelectorAll('#grid .member .grade')].map(e=>o.indexOf(e.textContent.trim())); return g.length>1 && g.every((v,i)=>i===0||g[i-1]>=v)",
+          "targets": [],
+          "value": "asc"
+        },
+        {
+          "id": "a1051269-72fe-49d0-950b-9bae09fd6e97",
+          "comment": "",
+          "command": "assert",
+          "target": "asc",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "1e2bacee-ed30-4ca7-b8f0-f149550273f5",
+          "comment": "",
+          "command": "select",
+          "target": "id=sort",
+          "targets": [],
+          "value": "label=Sort: most votes missed"
+        },
+        {
+          "id": "9508c428-d599-4d65-9cb5-2b1627d0fee3",
+          "comment": "",
+          "command": "runScript",
+          "target": "document.getElementById('sort').dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "d6433748-3492-4aad-bc18-13f722c6ba7e",
+          "comment": "Lowest attendance first",
+          "command": "executeScript",
+          "target": "const a=[...document.querySelectorAll('#grid .member')].map(e=>{const m=e.textContent.match(/([\\d.]+)% of votes/); return m?Number(m[1]):200}); return a.every((v,i)=>i===0||a[i-1]<=v)",
+          "targets": [],
+          "value": "attendance"
+        },
+        {
+          "id": "d559ecd1-bda8-4841-9a2f-693a7865bd11",
+          "comment": "",
+          "command": "assert",
+          "target": "attendance",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "47d4eb27-a660-4d8e-a9cd-553f2d098531",
+          "comment": "",
+          "command": "select",
+          "target": "id=sort",
+          "targets": [],
+          "value": "label=Sort: name"
+        },
+        {
+          "id": "707c4ab8-ef2e-44a3-9693-91625d8c0013",
+          "comment": "",
+          "command": "runScript",
+          "target": "document.getElementById('sort').dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "bb013b7d-f8b0-44f8-ae5f-4dc0c7566e18",
+          "comment": "",
+          "command": "executeScript",
+          "target": "const last=Object.fromEntries(window.REPORT_DATA.members.map(m=>[m.id,m.last])); const n=[...document.querySelectorAll('#grid .member')].map(e=>last[e.dataset.id]); return n.every((v,i)=>i===0||n[i-1].localeCompare(v)<=0)",
+          "targets": [],
+          "value": "byName"
+        },
+        {
+          "id": "20fddf9a-3bea-42cb-a7b3-6ee7d43aaf25",
+          "comment": "",
+          "command": "assert",
+          "target": "byName",
+          "targets": [],
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "id": "2156e868-e699-48d0-bc81-81f405cf3616",
+      "name": "05 Grade distribution filter",
+      "commands": [
+        {
+          "id": "bccd5950-e291-4653-abeb-37cba4d5b15c",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "7770e1e5-261b-407d-875c-1a60184f0724",
+          "comment": "Start from the default grading weights",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "504e1770-4555-4b17-b8ae-af4fe34de5ab",
+          "comment": "",
+          "command": "open",
+          "target": "/?fresh",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e37823d3-1893-4be0-ba7b-9438bbf18e6d",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "6e3c8403-c580-4e15-90f3-7aa69f5f7f1b",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "total"
+        },
+        {
+          "id": "a4ec009d-e73b-442f-b152-88caef4bf1ba",
+          "comment": "",
+          "command": "storeAttribute",
+          "target": "css=#summary button[data-g='A']@aria-pressed",
+          "targets": [],
+          "value": "attr"
+        },
+        {
+          "id": "6859c1ff-8a0b-458d-84b1-0c4f82fb145d",
+          "comment": "",
+          "command": "assert",
+          "target": "attr",
+          "targets": [],
+          "value": "false"
+        },
+        {
+          "id": "08c69ac9-2cc1-4631-9345-cdb391b4f133",
+          "comment": "",
+          "command": "click",
+          "target": "css=#summary button[data-g='A']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e36b4601-006d-49ad-b21e-8963b8a694d1",
+          "comment": "",
+          "command": "storeAttribute",
+          "target": "css=#summary button[data-g='A']@aria-pressed",
+          "targets": [],
+          "value": "attr"
+        },
+        {
+          "id": "661da79e-06db-45b5-b288-25da21ff6e03",
+          "comment": "",
+          "command": "assert",
+          "target": "attr",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "725ced87-d617-4765-9089-f8648e6e703d",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return document.querySelectorAll('#grid .member').length",
+          "targets": [],
+          "value": "aCount"
+        },
+        {
+          "id": "2705d39b-4360-4ea6-a008-090e5efb25d3",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${aCount} of ${total} members · showing A grades"
+        },
+        {
+          "id": "2fe47e33-5a7f-49e8-b6c1-2f50a5d2f5dc",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return [...document.querySelectorAll('#grid .member')].every(e => e.querySelector('.grade').textContent.trim().startsWith('A'))",
+          "targets": [],
+          "value": "allA"
+        },
+        {
+          "id": "0c29c88b-ebcf-4197-8964-d72ac3b9b022",
+          "comment": "",
+          "command": "assert",
+          "target": "allA",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "6e158220-486a-4ee9-af6f-789d0377ba23",
+          "comment": "Switching letters replaces the filter",
+          "command": "click",
+          "target": "css=#summary button[data-g='F']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "65fd7d54-eddc-4070-907d-2345375150c0",
+          "comment": "",
+          "command": "storeAttribute",
+          "target": "css=#summary button[data-g='A']@aria-pressed",
+          "targets": [],
+          "value": "attr"
+        },
+        {
+          "id": "9a08ac08-36e1-497d-97bb-cf4cebbe0d7a",
+          "comment": "",
+          "command": "assert",
+          "target": "attr",
+          "targets": [],
+          "value": "false"
+        },
+        {
+          "id": "44831e40-b53e-4400-9187-d564fe05d846",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return [...document.querySelectorAll('#grid .member')].every(e => e.querySelector('.grade').textContent.trim() === 'F')",
+          "targets": [],
+          "value": "allF"
+        },
+        {
+          "id": "70728efb-d315-4b35-a288-d332c6e54f7f",
+          "comment": "",
+          "command": "assert",
+          "target": "allF",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "d2dd85ec-7bcb-4391-b395-d47b3a9a7e69",
+          "comment": "Clicking again clears the filter",
+          "command": "click",
+          "target": "css=#summary button[data-g='F']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "a9437183-65ec-4a15-86ae-15c21e0d9bca",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${total} of ${total} members"
+        },
+        {
+          "id": "6b47884e-2b09-4e91-868d-dba4f4dd2b80",
+          "comment": "Bar totals add up to the graded members",
+          "command": "executeScript",
+          "target": "return [...document.querySelectorAll('#summary .n')].reduce((s,e)=>s+parseInt(e.textContent),0) === document.querySelectorAll('#grid .grade:not(.g-—)').length",
+          "targets": [],
+          "value": "sumMatches"
+        },
+        {
+          "id": "3426abf1-2b76-4eb4-86fa-f5deb7223fd3",
+          "comment": "",
+          "command": "assert",
+          "target": "sumMatches",
+          "targets": [],
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "id": "f5f2489b-bee6-4e96-b674-f790feda4ce5",
+      "name": "06 Member detail card",
+      "commands": [
+        {
+          "id": "aa9d9fe7-dce6-4ae4-9b4e-6c6c72c24b1c",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "8344f759-66f5-4972-b1c8-25c81697ce65",
+          "comment": "Start from the default grading weights",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "df505f28-e094-4c3c-bd61-7c45745ed9fa",
+          "comment": "",
+          "command": "open",
+          "target": "/?fresh",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "2e2892bd-bc66-43f8-85b4-e9942c35cad3",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "f1db291a-1e12-4cf6-80c3-1a3c6f0d62c5",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "total"
+        },
+        {
+          "id": "49f9ea46-c28f-4c8b-bee1-8de7a81ea154",
+          "comment": "",
+          "command": "storeAttribute",
+          "target": "css=#grid .member:first-child@data-id",
+          "targets": [],
+          "value": "memberId"
+        },
+        {
+          "id": "42a2b4ca-4668-4e34-89a6-aee1b3fa8a6c",
+          "comment": "",
+          "command": "storeText",
+          "target": "css=#grid .member:first-child .name",
+          "targets": [],
+          "value": "memberName"
+        },
+        {
+          "id": "24018a1b-e5fd-4ae8-86ea-b4e661c899b5",
+          "comment": "",
+          "command": "storeText",
+          "target": "css=#grid .member:first-child .grade",
+          "targets": [],
+          "value": "memberGrade"
+        },
+        {
+          "id": "6b18b35f-cd4c-4c34-87e0-eaf603f823ff",
+          "comment": "",
+          "command": "click",
+          "target": "css=#grid .member:first-child",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e3c2d8b6-bd00-4628-b976-11a7b07c9866",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "70f1a9e9-864f-4ad2-b55e-fd9568504d70",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=card-name",
+          "targets": [],
+          "value": "${memberName}"
+        },
+        {
+          "id": "61f98c0f-db03-4785-8594-ed3195e541fa",
+          "comment": "Card grade matches the list",
+          "command": "assertText",
+          "target": "css=#card .card-head .grade",
+          "targets": [],
+          "value": "${memberGrade}"
+        },
+        {
+          "id": "127d6437-0c23-4120-9929-b12e522da6b9",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return document.querySelectorAll('#card .subject').length",
+          "targets": [],
+          "value": "subjects"
+        },
+        {
+          "id": "d4a3d6a0-3779-4285-919f-9a25ee6846de",
+          "comment": "Attendance, bills written, bills supported",
+          "command": "assert",
+          "target": "subjects",
+          "targets": [],
+          "value": "3"
+        },
+        {
+          "id": "c2ad397e-f989-478b-9691-78b825b4c043",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return document.querySelector('#card .subject:nth-child(1) h3').textContent.trim()",
+          "targets": [],
+          "value": "firstSubject"
+        },
+        {
+          "id": "a95a09b1-9c11-4452-aef1-d09c5680719b",
+          "comment": "",
+          "command": "assert",
+          "target": "firstSubject",
+          "targets": [],
+          "value": "Vote attendance 40% of grade"
+        },
+        {
+          "id": "4a18ecb9-4113-4d89-99e3-2f9e65141d7a",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=#card a[href='https://www.congress.gov/member/${memberId}']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "ff71f2e6-28a5-407a-9c6c-48468f232e2e",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return location.hash",
+          "targets": [],
+          "value": "hash"
+        },
+        {
+          "id": "3df735e7-9730-448a-8dd8-200cfae3b003",
+          "comment": "URL links to the open card",
+          "command": "assert",
+          "target": "hash",
+          "targets": [],
+          "value": "#${memberId}"
+        },
+        {
+          "id": "e928d203-61a2-40ba-a56c-70aca61a2150",
+          "comment": "",
+          "command": "click",
+          "target": "css=#card .close",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "48621960-f477-454d-a504-43c894fc1ab6",
+          "comment": "",
+          "command": "waitForElementNotVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "a7fe1883-0a1a-434a-b3e5-7e2d8f32215a",
+          "comment": "The hash is cleared by the dialog's close event, which fires just after it hides",
+          "command": "executeAsyncScript",
+          "target": "return new Promise(done => { const start = Date.now(); (function poll() { if (!location.hash || Date.now() - start > 3000) done(location.hash); else setTimeout(poll, 50); })(); })",
+          "targets": [],
+          "value": "hashAfter"
+        },
+        {
+          "id": "506f2621-1161-4472-9f43-e15af5087bad",
+          "comment": "",
+          "command": "assert",
+          "target": "hashAfter",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "5c5aa54c-5483-4600-b284-dafbb87026a2",
+          "comment": "",
+          "command": "click",
+          "target": "css=#grid .member:nth-child(2)",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "d478cc9e-0170-4b95-aa98-f84915a3aadb",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "b29e441c-611f-46b4-a2d4-4a7a3a88093a",
+          "comment": "Escape closes the card",
+          "command": "sendKeys",
+          "target": "css=#card .close",
+          "targets": [],
+          "value": "${KEY_ESCAPE}"
+        },
+        {
+          "id": "c7e6b075-1292-4acb-9155-390b80ec072f",
+          "comment": "",
+          "command": "waitForElementNotVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "62528d4a-662c-4d4d-bc03-02815eb0f40a",
+          "comment": "Deep link opens the card on load",
+          "command": "open",
+          "target": "/?deeplink#${memberId}",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "75b220c3-46c5-4005-80aa-2f6920b07f36",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "1dd00ab0-b279-4045-bf09-0d92b19c000e",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=card-name",
+          "targets": [],
+          "value": "${memberName}"
+        }
+      ]
+    },
+    {
+      "id": "ea3bf1e8-d35f-4b94-9256-db2f4e2580a0",
+      "name": "07 Adjust grading weights",
+      "commands": [
+        {
+          "id": "8f574404-d3f8-41de-b9bf-09585c0e9d91",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "0e1ea497-c9df-4908-b7d1-291963fb607d",
+          "comment": "Start from the default grading weights",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "ffef88b5-f4d7-4dc5-8b4e-c851d7d99727",
+          "comment": "",
+          "command": "open",
+          "target": "/?fresh",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "17f30263-a5cd-4d97-9c77-a7b590e3b83c",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "afd4ea2a-51d3-43ff-aeca-ea371e8ea38a",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "total"
+        },
+        {
+          "id": "14b27236-d6eb-4041-9cd8-73dd3a5ae39e",
+          "comment": "",
+          "command": "waitForElementNotVisible",
+          "target": "id=weights",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "a01e6423-8980-4fae-961d-6232aa47a4b1",
+          "comment": "",
+          "command": "storeAttribute",
+          "target": "id=weights-btn@aria-expanded",
+          "targets": [],
+          "value": "attr"
+        },
+        {
+          "id": "a701deab-d00f-4037-8112-58d2154a0ba3",
+          "comment": "",
+          "command": "assert",
+          "target": "attr",
+          "targets": [],
+          "value": "false"
+        },
+        {
+          "id": "aa0b15a1-1628-4f25-934b-077addee5527",
+          "comment": "",
+          "command": "click",
+          "target": "id=weights-btn",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "27ce861b-0d26-4772-824a-3cce5638419b",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "id=weights",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "a72d25ae-1b98-49b4-a4ac-a4c6cc5baccd",
+          "comment": "",
+          "command": "storeAttribute",
+          "target": "id=weights-btn@aria-expanded",
+          "targets": [],
+          "value": "attr"
+        },
+        {
+          "id": "8effd32e-d8c0-4111-9b6d-799878d7e541",
+          "comment": "",
+          "command": "assert",
+          "target": "attr",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "16b831af-bb27-40ec-afd4-ff6f5d5c655f",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=wv-attendance",
+          "targets": [],
+          "value": "40"
+        },
+        {
+          "id": "29a57213-ee60-424e-a3cf-be98934da66a",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=wv-sponsored",
+          "targets": [],
+          "value": "35"
+        },
+        {
+          "id": "1900aa5b-da19-4444-a06d-adb2f1e7d134",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=wv-cosponsored",
+          "targets": [],
+          "value": "25"
+        },
+        {
+          "id": "f1ecffd6-3d77-45f5-8c22-d42e8be7ccb7",
+          "comment": "Grade on attendance only",
+          "command": "runScript",
+          "target": "[['attendance',100],['sponsored',0],['cosponsored',0]].forEach(([k,v])=>{const s=document.getElementById('w-'+k); s.value=v; s.dispatchEvent(new Event('input'))})",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "774cbae4-e17e-4afb-944f-28baba25fc85",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=wv-attendance",
+          "targets": [],
+          "value": "100"
+        },
+        {
+          "id": "81d70c39-9c48-4e50-9fe4-bc0e224f31ab",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=wv-sponsored",
+          "targets": [],
+          "value": "0"
+        },
+        {
+          "id": "1b64c6af-c879-4ea3-b3b9-83a82531aefd",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return localStorage.getItem('rc-weights')",
+          "targets": [],
+          "value": "saved"
+        },
+        {
+          "id": "376508ee-ce7b-48ff-a9ec-203fbbbd0fee",
+          "comment": "",
+          "command": "assert",
+          "target": "saved",
+          "targets": [],
+          "value": "{\"attendance\":100,\"sponsored\":0,\"cosponsored\":0}"
+        },
+        {
+          "id": "72c70c90-0ac8-4471-85e9-4103efa3517f",
+          "comment": "Weights survive a reload",
+          "command": "open",
+          "target": "/?persisted",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e9ed06e4-88b1-4823-bff1-d10ff1bd608d",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "bafa48d3-c0ca-4c8b-96c6-719459336a4b",
+          "comment": "",
+          "command": "assertValue",
+          "target": "id=w-attendance",
+          "targets": [],
+          "value": "100"
+        },
+        {
+          "id": "40361827-b49a-4935-a52d-473af035bf1e",
+          "comment": "",
+          "command": "assertValue",
+          "target": "id=w-cosponsored",
+          "targets": [],
+          "value": "0"
+        },
+        {
+          "id": "fe506c9b-5ec4-4a77-8624-143668f05765",
+          "comment": "",
+          "command": "click",
+          "target": "css=#grid .member:first-child",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "1324b3ca-263d-431b-9666-a56da63c3257",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "34a29dca-3ff1-4255-be98-a56d08d9bb4a",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return document.querySelector('#card .subject:nth-child(1) .tag').textContent",
+          "targets": [],
+          "value": "weightTag"
+        },
+        {
+          "id": "1d6d6040-659a-42d7-b029-0bce00115d72",
+          "comment": "",
+          "command": "assert",
+          "target": "weightTag",
+          "targets": [],
+          "value": "100% of grade"
+        },
+        {
+          "id": "afc617e2-3285-4b01-bfe5-93b5b2d47fe6",
+          "comment": "",
+          "command": "click",
+          "target": "css=#card .close",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "b8ef1f7a-5da9-4958-b32f-882a8caf9a35",
+          "comment": "",
+          "command": "waitForElementNotVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "57b40544-a115-4ab8-a951-abaf281ca197",
+          "comment": "",
+          "command": "click",
+          "target": "id=weights-btn",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "069dec20-8761-4752-a69a-9d6feda89f29",
+          "comment": "All weights zero: nobody can be graded",
+          "command": "runScript",
+          "target": "['attendance','sponsored','cosponsored'].forEach(k=>{const s=document.getElementById('w-'+k); s.value=0; s.dispatchEvent(new Event('input'))})",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "f92e6281-e319-4fc1-8c96-489c0ce40fc1",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return [...document.querySelectorAll('#grid .member')].every(e => e.querySelector('.grade').textContent.trim() === '—')",
+          "targets": [],
+          "value": "allUngraded"
+        },
+        {
+          "id": "27ae1f20-987c-41b5-849a-cfe688303fa2",
+          "comment": "",
+          "command": "assert",
+          "target": "allUngraded",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "ccb984cd-8a0e-4103-bb04-9e97f4c45d86",
+          "comment": "",
+          "command": "click",
+          "target": "id=reset-weights",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "082cb43c-b604-444f-a1e5-40186f9089e1",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=wv-attendance",
+          "targets": [],
+          "value": "40"
+        },
+        {
+          "id": "0536d5a6-1c78-4f07-8a0e-1d4945f40717",
+          "comment": "",
+          "command": "assertValue",
+          "target": "id=w-sponsored",
+          "targets": [],
+          "value": "35"
+        },
+        {
+          "id": "28de0b91-8905-4ccc-920d-103bd5240bbf",
+          "comment": "",
+          "command": "assertValue",
+          "target": "id=w-cosponsored",
+          "targets": [],
+          "value": "25"
+        },
+        {
+          "id": "41248517-8dfc-4d3c-bc5f-23bbcdc74d44",
+          "comment": "Grades are back after reset",
+          "command": "executeScript",
+          "target": "const o=['A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F','—']; const g=[...document.querySelectorAll('#grid .member .grade')].map(e=>o.indexOf(e.textContent.trim())); return g.length>1 && g.every((v,i)=>i===0||g[i-1]<=v)",
+          "targets": [],
+          "value": "desc"
+        },
+        {
+          "id": "a65bc537-8aae-4068-ac30-ecefe7037bb9",
+          "comment": "",
+          "command": "assert",
+          "target": "desc",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "0719c814-dbc0-403f-b5fb-d7e27b8266ab",
+          "comment": "Clean up",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "46b57319-c2f1-40a8-ada6-51cfbe77f54c",
+      "name": "08 Methodology and sources",
+      "commands": [
+        {
+          "id": "522ff35a-f041-418d-a21e-aa3639e799e0",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "7d00c275-2df8-4aa7-9392-e01d4430426d",
+          "comment": "Start from the default grading weights",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "89288b64-df7d-4348-b131-7ac5055b836f",
+          "comment": "",
+          "command": "open",
+          "target": "/?fresh",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "09a34a6b-5fdf-4b42-9eb0-a036b70d256c",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "73dee6d1-4bbe-4d1f-8574-bd9f1448f19f",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "total"
+        },
+        {
+          "id": "58bccb3c-62fc-4c50-a17b-6d07e6fcb0ac",
+          "comment": "",
+          "command": "assertText",
+          "target": "css=#methodology h2",
+          "targets": [],
+          "value": "How grades are calculated"
+        },
+        {
+          "id": "0154eaf1-6a4e-45a3-9125-6e3cc226f2fe",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return [...document.querySelectorAll('#methodology h3')].map(h=>h.textContent).join('|')",
+          "targets": [],
+          "value": "headings"
+        },
+        {
+          "id": "1aa8aa0e-f3ef-4846-8630-7091ed6bea2b",
+          "comment": "",
+          "command": "assert",
+          "target": "headings",
+          "targets": [],
+          "value": "Vote attendance|Bills written|Bills supported|Letter grade"
+        },
+        {
+          "id": "a9c87a31-b4a6-4131-ba7d-406033cc4a46",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=#methodology a[href='https://github.com/unitedstates/congress-legislators']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "aa72a48d-a63c-44c3-9614-042b6c79e7b6",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=#methodology a[href='https://voteview.com']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "5861221a-fd79-4f29-aa0a-e7b72aa0587b",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=#methodology a[href='https://api.congress.gov']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "9e03e2d1-6acf-4c12-8a2c-b83a022e4bfe",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return /^Updated \\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2} UTC\\.$/.test(document.getElementById('generated').textContent)",
+          "targets": [],
+          "value": "stamp"
+        },
+        {
+          "id": "86efcb58-ff76-4056-9565-e14296be3238",
+          "comment": "Data timestamp is shown",
+          "command": "assert",
+          "target": "stamp",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "ad0a6f31-919c-4207-bac8-fe8e5df00f7a",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return (Date.now() - Date.parse(window.REPORT_DATA.generated.replace(' UTC','Z').replace(' ','T'))) / 86400000 < 3",
+          "targets": [],
+          "value": "fresh"
+        },
+        {
+          "id": "acc697ca-fabd-4b6f-8b4b-a51eaca937f3",
+          "comment": "Nightly update ran within the last 3 days",
+          "command": "assert",
+          "target": "fresh",
+          "targets": [],
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "id": "96b92c54-ae5d-4054-8415-e79cffb42403",
+      "name": "09 Data integrity",
+      "commands": [
+        {
+          "id": "f4a62e18-82d7-4997-93b4-4d75315a13e5",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e738fedb-a074-460e-a67d-967da3a8dcd1",
+          "comment": "Start from the default grading weights",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "447a4aaf-3659-4848-b1ed-abbe66f3f40d",
+          "comment": "",
+          "command": "open",
+          "target": "/?fresh",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "362fe386-dc41-4865-9747-743aef481c86",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "77c09414-0361-4b1d-a5cd-6811ba9c849d",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "total"
+        },
+        {
+          "id": "2073c0f1-c0d2-4743-ae74-2f1f21ee403e",
+          "comment": "535 voting members + 6 delegates, allowing for vacancies",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length >= 530 && window.REPORT_DATA.members.length <= 541",
+          "targets": [],
+          "value": "sizeOk"
+        },
+        {
+          "id": "58c264a3-e5fb-4a9c-aff6-7f293f085506",
+          "comment": "",
+          "command": "assert",
+          "target": "sizeOk",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "5c202b33-58d4-4f30-882c-8a2e315b2deb",
+          "comment": "",
+          "command": "executeScript",
+          "target": "const s = window.REPORT_DATA.members.filter(m => m.chamber === 'Senate'); return s.length >= 95 && s.length <= 100",
+          "targets": [],
+          "value": "senateOk"
+        },
+        {
+          "id": "de6a3471-8ef9-4432-9925-e5ab59884eed",
+          "comment": "",
+          "command": "assert",
+          "target": "senateOk",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "89389fac-0fe9-443d-a6d6-8a25082feb0b",
+          "comment": "",
+          "command": "executeScript",
+          "target": "const h = window.REPORT_DATA.members.filter(m => m.chamber === 'House'); return h.length >= 430 && h.length <= 441",
+          "targets": [],
+          "value": "houseOk"
+        },
+        {
+          "id": "ffd41d11-8874-4deb-9685-68720b00e33f",
+          "comment": "",
+          "command": "assert",
+          "target": "houseOk",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "e7a183a0-8dba-4b4d-a5de-7cfee482fa1e",
+          "comment": "No state has more than two senators",
+          "command": "executeScript",
+          "target": "const c = {}; window.REPORT_DATA.members.filter(m => m.chamber === 'Senate').forEach(m => c[m.state] = (c[m.state] || 0) + 1); return Object.values(c).every(n => n <= 2)",
+          "targets": [],
+          "value": "twoPerState"
+        },
+        {
+          "id": "171fa9c9-a7a7-4591-8f9f-3f0918e32369",
+          "comment": "",
+          "command": "assert",
+          "target": "twoPerState",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "838a7ec8-7191-4f1a-9493-57da46db3548",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return new Set(window.REPORT_DATA.members.map(m => m.id)).size === window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "uniqueIds"
+        },
+        {
+          "id": "389923b7-14f9-4eba-944b-460486eda15e",
+          "comment": "",
+          "command": "assert",
+          "target": "uniqueIds",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "eed2889d-a69a-412f-9d99-38ce193b0744",
+          "comment": "Every member has a valid ID, name, chamber, party and state",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.every(m => /^[A-Z]\\d{6}$/.test(m.id) && m.name && m.last && ['House', 'Senate'].includes(m.chamber) && ['Democrat', 'Republican', 'Independent'].includes(m.party) && /^[A-Z]{2}$/.test(m.state))",
+          "targets": [],
+          "value": "fieldsOk"
+        },
+        {
+          "id": "a8e02d73-233f-433d-8304-c149d32a8790",
+          "comment": "",
+          "command": "assert",
+          "target": "fieldsOk",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "f06a7934-6976-4c1d-a26e-82d6904d0a08",
+          "comment": "Vote counts are consistent",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.every(m => m.votes.eligible >= 0 && m.votes.missed >= 0 && m.votes.missed <= m.votes.eligible && m.votes.eligible <= m.votes.chamberTotal)",
+          "targets": [],
+          "value": "votesOk"
+        },
+        {
+          "id": "794784de-7ee5-43cc-839f-9712eba5b126",
+          "comment": "",
+          "command": "assert",
+          "target": "votesOk",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "5d584923-1b06-49bf-93aa-8b6fed082bee",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.every(m => m.attendance === null || (m.attendance >= 0 && m.attendance <= 1))",
+          "targets": [],
+          "value": "attendanceOk"
+        },
+        {
+          "id": "1688d526-464b-403d-a434-7e971b2a0371",
+          "comment": "",
+          "command": "assert",
+          "target": "attendanceOk",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "07b92fa0-f322-493f-8dd4-909bdd068700",
+          "comment": "Bill data is loaded for everyone",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.hasBills && window.REPORT_DATA.members.every(m => m.bills && m.bills.sponsored >= 0 && m.bills.cosponsored >= 0)",
+          "targets": [],
+          "value": "billsOk"
+        },
+        {
+          "id": "a3604194-bd03-4c1d-acff-b6e5f12c766f",
+          "comment": "",
+          "command": "assert",
+          "target": "billsOk",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "91af686b-0bdf-4f91-8644-67c603cadec3",
+          "comment": "Every notable-bill link goes to congress.gov",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.flatMap(m => m.bills ? m.bills.notable : []).every(n => /^https:\\/\\/www\\.congress\\.gov\\//.test(n.url))",
+          "targets": [],
+          "value": "notableLinksOk"
+        },
+        {
+          "id": "26eada35-068b-4e78-aa65-0163d521a8bc",
+          "comment": "",
+          "command": "assert",
+          "target": "notableLinksOk",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "58d5ccc3-6788-49bf-b377-c73da4ba9511",
+          "comment": "With default weights everyone gets a real letter grade",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.every(m => ['A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F'].includes(m.grade))",
+          "targets": [],
+          "value": "allGraded"
+        },
+        {
+          "id": "57cff310-4635-4366-96bb-0cec7ef96e4d",
+          "comment": "",
+          "command": "assert",
+          "target": "allGraded",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "fe1a95a7-0e1c-4129-9c4f-5fd3d13a2e74",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.every(m => m.score >= 0 && m.score <= 100)",
+          "targets": [],
+          "value": "scoresInRange"
+        },
+        {
+          "id": "b0761431-5ad6-4a0f-aac6-b69a4afb95cf",
+          "comment": "",
+          "command": "assert",
+          "target": "scoresInRange",
+          "targets": [],
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "id": "b787fb66-0169-456b-9431-b6eead319ffa",
+      "name": "10 More interactions",
+      "commands": [
+        {
+          "id": "f4a62e18-82d7-4997-93b4-4d75315a13e5",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e738fedb-a074-460e-a67d-967da3a8dcd1",
+          "comment": "Start from the default grading weights",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "447a4aaf-3659-4848-b1ed-abbe66f3f40d",
+          "comment": "",
+          "command": "open",
+          "target": "/?fresh",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "362fe386-dc41-4865-9747-743aef481c86",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "77c09414-0361-4b1d-a5cd-6811ba9c849d",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "total"
+        },
+        {
+          "id": "a83af978-547a-47fc-b370-7cfe1debf605",
+          "comment": "A state abbreviation matches that state",
+          "command": "type",
+          "target": "id=q",
+          "targets": [],
+          "value": "oh"
+        },
+        {
+          "id": "a0a5af99-49d1-49e3-afad-0c6c8cb9e8f6",
+          "comment": "Same rule as the site: name, state abbreviation or state name",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.filter(m => m.state === 'OH' || m.name.toLowerCase().includes('oh') || (STATES[m.state] || '').toLowerCase().includes('oh')).length",
+          "targets": [],
+          "value": "ohMatches"
+        },
+        {
+          "id": "9b6778ed-6fa5-4bd7-923a-383142fe227e",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${ohMatches} of ${total} members"
+        },
+        {
+          "id": "aaa7800e-c3f8-4412-9bf0-16e315cf3e48",
+          "comment": "",
+          "command": "runScript",
+          "target": "const q = document.getElementById('q'); q.value = ''; q.dispatchEvent(new Event('input'))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "57ea4c94-2cc2-4ce0-b504-5123dfa6d582",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${total} of ${total} members"
+        },
+        {
+          "id": "af67e270-1a84-467d-9d0f-9a3c0d6de9d3",
+          "comment": "Every partial-term member, and only they, carry the Partial term tag",
+          "command": "executeScript",
+          "target": "return document.querySelectorAll('#grid .member .tag').length === window.REPORT_DATA.members.filter(m => m.partial).length",
+          "targets": [],
+          "value": "partialTags"
+        },
+        {
+          "id": "0c33b421-89db-4b03-9d4f-493a07fc0190",
+          "comment": "",
+          "command": "assert",
+          "target": "partialTags",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "5a690ade-bbb9-46d7-b960-5723b5dfe045",
+          "comment": "Delegates from DC and the territories are labeled",
+          "command": "executeScript",
+          "target": "return [...document.querySelectorAll('#grid .member')].filter(e => e.textContent.includes('Delegate ·')).length === window.REPORT_DATA.members.filter(m => m.delegate).length",
+          "targets": [],
+          "value": "delegateLabels"
+        },
+        {
+          "id": "22fe5d29-93a2-4745-a50c-c336de6bedf9",
+          "comment": "",
+          "command": "assert",
+          "target": "delegateLabels",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "657a5f31-aa03-4ba0-8427-7900f8000c9d",
+          "comment": "",
+          "command": "click",
+          "target": "css=#grid .member:first-child",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "f36022d4-fa5a-4e62-854c-e81c686a67d1",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "a7b290f8-ca79-47a1-8029-fc645af108d0",
+          "comment": "Clicking the backdrop outside the card closes it",
+          "command": "runScript",
+          "target": "const d = document.getElementById('card'); d.dispatchEvent(new MouseEvent('click', { bubbles: true }))",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "2d419391-e5d4-4196-a20a-0e7064d364f0",
+          "comment": "",
+          "command": "waitForElementNotVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "da613e5a-7105-41fa-9456-a53e2c84612b",
+          "comment": "",
+          "command": "click",
+          "target": "css=#grid .member:first-child",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "2c8ecd69-8db6-4d54-96e7-a52fa39f57ea",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "120dacc5-7c08-4ead-a75c-dd207f6ea830",
+          "comment": "Outside links open in a new tab with rel=noopener",
+          "command": "executeScript",
+          "target": "return [...document.querySelectorAll('#card .notable a')].every(a => a.target === '_blank' && a.rel.includes('noopener'))",
+          "targets": [],
+          "value": "safeLinks"
+        },
+        {
+          "id": "07496471-af6c-4275-9070-97e00adb7179",
+          "comment": "",
+          "command": "assert",
+          "target": "safeLinks",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "70c9af5a-8b5b-40a9-b241-ce58f1da1b89",
+          "comment": "Bill progress shows all four stages",
+          "command": "executeScript",
+          "target": "return document.querySelectorAll('#card .stages div').length === 4",
+          "targets": [],
+          "value": "stages"
+        },
+        {
+          "id": "8474e908-75b5-4acc-a080-ce1f18e90c83",
+          "comment": "",
+          "command": "assert",
+          "target": "stages",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "5d563232-fcfb-4ea0-ad43-b3575c4c6589",
+          "comment": "",
+          "command": "click",
+          "target": "css=#card .close",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "24a8c104-3867-49d4-b94b-e5cc7a666b9d",
+          "comment": "",
+          "command": "waitForElementNotVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "f451822f-05fa-46b6-bcea-cbbfe539c3c1",
+          "comment": "A deep link to an unknown member doesn't open a card or break the page",
+          "command": "open",
+          "target": "/?bad#NOTAMEMBER",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "f07e8c65-9268-4693-bcd1-195fe19e241a",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "d56dd6c1-44f5-450e-880f-5a6e4f0c8c04",
+          "comment": "",
+          "command": "assertNotVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "dbde1238-c838-4173-b131-3903d6708729",
+          "comment": "",
+          "command": "assertText",
+          "target": "id=count",
+          "targets": [],
+          "value": "${total} of ${total} members"
+        }
+      ]
+    },
+    {
+      "id": "eec79770-167f-4e1b-9994-fb89dee34197",
+      "name": "11 Phone layout",
+      "commands": [
+        {
+          "id": "1669c907-1180-4320-b5f3-bd8842b8190b",
+          "comment": "",
+          "command": "setWindowSize",
+          "target": "390x844",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "f4a62e18-82d7-4997-93b4-4d75315a13e5",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e738fedb-a074-460e-a67d-967da3a8dcd1",
+          "comment": "Start from the default grading weights",
+          "command": "runScript",
+          "target": "localStorage.removeItem('rc-weights')",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "447a4aaf-3659-4848-b1ed-abbe66f3f40d",
+          "comment": "",
+          "command": "open",
+          "target": "/?fresh",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "362fe386-dc41-4865-9747-743aef481c86",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=#grid .member",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "77c09414-0361-4b1d-a5cd-6811ba9c849d",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return window.REPORT_DATA.members.length",
+          "targets": [],
+          "value": "total"
+        },
+        {
+          "id": "e67aacad-b2c6-4bf8-ae2b-437c2d12a6b9",
+          "comment": "No horizontal scrolling at phone width",
+          "command": "executeScript",
+          "target": "return document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+          "targets": [],
+          "value": "noSideScroll"
+        },
+        {
+          "id": "ad978bf5-b333-4be6-bbe4-9e463740706b",
+          "comment": "",
+          "command": "assert",
+          "target": "noSideScroll",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "8e505c04-1de4-4d1e-ba67-a2cb7b97f4c4",
+          "comment": "",
+          "command": "assertVisible",
+          "target": "id=q",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "692c715d-285a-451f-97ce-14b2aae3ba92",
+          "comment": "",
+          "command": "assertVisible",
+          "target": "id=weights-btn",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "fc1f1f74-a231-4f7a-8405-8a8e6ab5ace0",
+          "comment": "",
+          "command": "assertVisible",
+          "target": "css=#grid .member:first-child .grade",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "24656755-aaab-45ec-a8a2-8a25cd89aeec",
+          "comment": "",
+          "command": "click",
+          "target": "css=#grid .member:first-child",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "f6cd1c84-cff9-4eaf-9c2a-f343881ce909",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "ba7c73aa-f598-409d-9b6b-f3d784d51256",
+          "comment": "The member card fits on screen",
+          "command": "executeScript",
+          "target": "const r = document.getElementById('card').getBoundingClientRect(); return r.left >= 0 && r.right <= window.innerWidth",
+          "targets": [],
+          "value": "cardFits"
+        },
+        {
+          "id": "6395d523-dfab-4cfe-b7f3-19e0fd646652",
+          "comment": "",
+          "command": "assert",
+          "target": "cardFits",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "bc5d29d8-d5b9-4372-812c-e7a43269e09b",
+          "comment": "",
+          "command": "click",
+          "target": "css=#card .close",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "86d63456-e725-4beb-b3bc-b63bf5e5f0b7",
+          "comment": "",
+          "command": "waitForElementNotVisible",
+          "target": "id=card",
+          "targets": [],
+          "value": "5000"
+        },
+        {
+          "id": "0715c9f0-a3f3-43b2-abbd-b166e8c8fe6c",
+          "comment": "Restore a desktop size for whatever runs next",
+          "command": "setWindowSize",
+          "target": "1280x900",
+          "targets": [],
+          "value": ""
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "7f8d70d4-14ba-4a52-9115-b3ff0052904b",
+      "name": "Smoke tests",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 600,
+      "tests": [
+        "f8184995-debc-4da8-9b27-34a5d1427dcd",
+        "7bc1d3f4-a628-4b7b-bdb9-97ebfd1a9b87",
+        "444c95bd-f7d3-42ef-a1d3-755913d311b3",
+        "8ce386a6-8c2a-4e37-93d7-5ead0c5355bc",
+        "2156e868-e699-48d0-bc81-81f405cf3616",
+        "f5f2489b-bee6-4e96-b674-f790feda4ce5",
+        "ea3bf1e8-d35f-4b94-9256-db2f4e2580a0",
+        "46b57319-c2f1-40a8-ada6-51cfbe77f54c",
+        "96b92c54-ae5d-4054-8415-e79cffb42403",
+        "b787fb66-0169-456b-9431-b6eead319ffa",
+        "eec79770-167f-4e1b-9994-fb89dee34197"
+      ]
+    }
+  ],
+  "urls": [
+    "https://congressreportcard.org/"
+  ],
+  "plugins": []
+}

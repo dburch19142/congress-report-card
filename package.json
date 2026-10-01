@@ -1,0 +1,18 @@
+{
+  "name": "congress-report-card",
+  "version": "1.0.0",
+  "description": "A static website that gives every current U.S. Representative and Senator a letter grade for the\r current Congress (119th, 2025–2027). Grades are based on:",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}

@@ -2,3 +2,6 @@
 __pycache__/
 .congress_api_key
 build.log
+node_modules/
+test-results/
+playwright-report/

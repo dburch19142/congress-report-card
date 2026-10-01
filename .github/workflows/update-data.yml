@@ -1,4 +1,4 @@
-# Rebuilds the report-card data every night and republishes the site.
+# Rebuilds the report-card data every night, republishes the site and smoke-tests it.
 # Needs the repository secret CONGRESS_API_KEY (Settings → Secrets and variables → Actions).
 name: Nightly data update
 
@@ -67,3 +67,10 @@ jobs:
           path: site
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Skipped along with deploy when the data didn't change.
+  smoke-tests:
+    needs: deploy
+    permissions:
+      contents: read
+    uses: ./.github/workflows/smoke-tests.yml
