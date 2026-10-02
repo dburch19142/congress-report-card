@@ -1,5 +1,8 @@
 # Congress Report Card
 
+[![Nightly data update](https://github.com/dburch19142/congress-report-card/actions/workflows/update-data.yml/badge.svg)](https://github.com/dburch19142/congress-report-card/actions/workflows/update-data.yml)
+[![Deploy site to GitHub Pages](https://github.com/dburch19142/congress-report-card/actions/workflows/pages.yml/badge.svg)](https://github.com/dburch19142/congress-report-card/actions/workflows/pages.yml)
+
 A static website that gives every current U.S. Representative and Senator a letter grade for the
 current Congress (119th, 2025–2027). Grades are based on:
 
