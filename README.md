@@ -65,6 +65,12 @@ it and redeploys the site. It can also be run by hand from the repo's **Actions*
 (**Nightly data update → Run workflow**). If more than 5% of members fail to load, the build stops
 and the site keeps the previous day's data.
 
+## Visitor counts
+
+Visits are counted by [GoatCounter](https://www.goatcounter.com), which uses no cookies. The site
+code is set in `GOATCOUNTER_CODE` in `site/analytics.js`; while it is empty nothing is counted.
+The numbers are on the GoatCounter dashboard at `https://<code>.goatcounter.com`.
+
 ## Ads
 
 Ads are off until a publisher ID is set. After AdSense approves the site:

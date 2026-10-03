@@ -354,6 +354,7 @@ def member_page(m, data):
 
   {footer("../")}
   <script src="../ads.js"></script>
+  <script src="../analytics.js"></script>
   <script src="../share.js"></script>
 </body>
 </html>
