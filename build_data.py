@@ -19,6 +19,7 @@ weighting can be adjusted in the browser. See site/app.js (GRADING).
 """
 import argparse
 import csv
+import http.client
 import io
 import json
 import os
@@ -64,7 +65,8 @@ def fetch(url, retries=4):
                 time.sleep(3 * (attempt + 1))
             else:
                 raise
-        except (urllib.error.URLError, TimeoutError):
+        # Dropped connections and responses cut off partway (IncompleteRead) are worth retrying too.
+        except (OSError, http.client.HTTPException):
             if attempt == retries - 1:
                 raise
             time.sleep(3 * (attempt + 1))
