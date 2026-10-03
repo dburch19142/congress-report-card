@@ -31,16 +31,18 @@ jobs:
         env:
           CONGRESS_API_KEY: ${{ secrets.CONGRESS_API_KEY }}
         run: python -u build_data.py
+      - name: Build the weekly digest (Saturdays only)
+        run: python -u build_digest.py
       - name: Commit updated data
         id: commit
         run: |
-          if git diff --quiet -- site/data/members.js; then
+          git add site/data/members.js site/digest digest_snapshot.json
+          if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add site/data/members.js
           git commit -m "Nightly data update $(date -u +%F)"
           git push
           echo "changed=true" >> "$GITHUB_OUTPUT"

@@ -472,7 +472,7 @@ test('13 Member page, share image and badge', async ({ page, request }) => {
 
 test('14 Methodology, privacy and contact pages', async ({ page, request }) => {
   const footer = page.locator('.site-footer nav a');
-  await expect(footer).toHaveText(['All members', 'Methodology', 'Privacy policy', 'Contact']);
+  await expect(footer).toHaveText(['All members', 'Weekly digest', 'Methodology', 'Privacy policy', 'Contact']);
 
   await footer.filter({ hasText: 'Methodology' }).click();
   await expect(page.locator('h1')).toHaveText('How grades are calculated');
@@ -496,6 +496,40 @@ test('14 Methodology, privacy and contact pages', async ({ page, request }) => {
   const sitemap = await (await request.get('/sitemap.xml')).text();
   const total = await memberCount(page);
   expect(sitemap.match(/\/members\/[A-Z]\d{6}\.html<\/loc>/g)).toHaveLength(total);
+});
+
+test('15 Weekly digest and email sign-up', async ({ page, request }) => {
+  // The sign-up box shows only once a MailerLite form is configured in signup.js
+  const configured = await page.evaluate(() => Boolean(SIGNUP.formAction || SIGNUP.pageUrl));
+  const signup = page.locator('#signup');
+  if (configured) {
+    await expect(signup).toBeVisible();
+    await expect(signup.locator("input[type='email'], a.button")).toBeVisible();
+  } else {
+    await expect(signup).toBeHidden();
+  }
+
+  await page.locator('.site-footer nav a', { hasText: 'Weekly digest' }).click();
+  await expect(page.locator('h1')).toHaveText(/^Week ending \w+ \d{1,2}, \d{4}$/);
+  await expect(page.locator('#digest h2').first()).toHaveText('Votes this week');
+  // Links in the digest are absolute so they work when pasted into an email
+  const relative = await page.locator('#digest a').evaluateAll(
+    (links) => links.map((a) => a.getAttribute('href')).filter((h) => !/^https:\/\//.test(h)));
+  expect(relative).toEqual([]);
+
+  // The copy buttons for sending the email appear only with ?send
+  await expect(page.locator('#send-tools')).toBeHidden();
+  await page.goto('/digest/?send');
+  await expect(page.locator('#send-tools')).toBeVisible();
+  await expect(page.locator('#send-subject')).toHaveText(await page.locator('h1').innerText());
+
+  const feed = await request.get('/digest/feed.xml');
+  expect(feed.ok()).toBeTruthy();
+  expect(await feed.text()).toContain('<title>Week ending ');
+
+  // The digest is no more than 8 days old
+  const ended = Date.parse((await page.locator('h1').innerText()).replace('Week ending ', '') + ' UTC');
+  expect((Date.now() - ended) / 86400000).toBeLessThan(9);
 });
 
 test.describe('phone', () => {

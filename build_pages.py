@@ -212,6 +212,7 @@ def footer(prefix=""):
     <div class="wrap">
       <nav aria-label="Site">
         <a href="{prefix or './'}">All members</a>
+        <a href="{prefix}digest/">Weekly digest</a>
         <a href="{prefix}methodology.html">Methodology</a>
         <a href="{prefix}privacy.html">Privacy policy</a>
         <a href="{prefix}contact.html">Contact</a>
@@ -377,7 +378,7 @@ def badge_svg(m):
 
 def sitemap(members, generated):
     day = generated[:10]
-    paths = ["", "methodology.html", "privacy.html", "contact.html"] + [f"members/{m['id']}.html" for m in members]
+    paths = ["", "digest/", "methodology.html", "privacy.html", "contact.html"] + [f"members/{m['id']}.html" for m in members]
     urls = "".join(f"<url><loc>{SITE_URL}/{p}</loc><lastmod>{day}</lastmod></url>\n" for p in paths)
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
             f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')

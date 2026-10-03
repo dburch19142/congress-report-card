@@ -151,6 +151,19 @@ a.button { font-size: 14px; color: var(--ink); background: var(--surface); borde
 .embed textarea { display: block; width: 100%; font: 13px/1.4 Consolas, Menlo, monospace; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin-bottom: 8px; resize: vertical; }
 .fineprint { font-size: 13px; color: var(--muted); margin: 16px 0 0; }
 
+.signup { margin: 40px 0 0; padding: 20px 24px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.signup h2 { font-family: Georgia, serif; font-size: 21px; margin: 0 0 4px; }
+.signup p { margin: 0 0 12px; font-size: 15px; color: var(--muted); }
+.signup form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.signup input { flex: 1 1 220px; max-width: 360px; }
+.signup form button { background: var(--accent); color: var(--surface); border-color: var(--accent); font-weight: 600; }
+.signup .signup-note { color: var(--ink); min-height: 1.5em; }
+.signup .fineprint { margin: 0; }
+.prose .eyebrow { margin-bottom: 4px; }
+.prose h3 { font-size: 16px; margin: 16px 0 4px; }
+.send-tools { margin-bottom: 24px; padding: 16px 20px; border: 1px dashed var(--accent); border-radius: var(--radius); font-size: 14px; }
+.send-tools p { font-size: 14px; margin: 8px 0; }
+
 .site-footer { border-top: 1px solid var(--line); margin-top: 40px; padding: 24px 0 40px; font-size: 14px; color: var(--muted); }
 .site-footer nav { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 8px; }
 .site-footer p { margin: 0; }
