@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Congress Report Card</title>
   <meta name="description" content="Letter grades for every U.S. Representative and Senator based on vote attendance and legislative work in the current Congress.">
+  <link rel="canonical" href="https://congressreportcard.org/">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -20,7 +21,7 @@
     <div id="notice" class="notice" hidden></div>
 
     <section class="controls" aria-label="Filters">
-      <input id="q" type="search" placeholder="Search by name or state…" aria-label="Search">
+      <input id="q" type="search" placeholder="Search by name, state or ZIP code…" aria-label="Search by name, state or ZIP code">
       <select id="chamber" aria-label="Chamber">
         <option value="">Both chambers</option>
         <option>House</option>
@@ -50,6 +51,7 @@
 
     <section class="summary" id="summary" aria-label="Grade distribution"></section>
 
+    <p class="zip-note" id="zip-note" role="status" hidden></p>
     <p class="count" id="count"></p>
     <section id="grid" class="grid" aria-live="polite"></section>
 
@@ -73,9 +75,21 @@
           <p>A ≥ 93, A− ≥ 90, B+ ≥ 87, B ≥ 83, B− ≥ 80, and so on down to F below 60. A member who joined partway through the Congress gets a <em>partial term</em> label. Their bill counts cover less time, so read those grades with care.</p>
         </div>
       </div>
-      <p class="sources">Data: rosters from <a href="https://github.com/unitedstates/congress-legislators">congress-legislators</a>, roll-call votes from <a href="https://voteview.com">Voteview</a>, legislation from <a href="https://api.congress.gov">Congress.gov</a>. Bill progress is inferred from each bill's latest action. <span id="generated"></span></p>
+      <p class="sources">Data: rosters from <a href="https://github.com/unitedstates/congress-legislators">congress-legislators</a>, roll-call votes from <a href="https://voteview.com">Voteview</a>, legislation from <a href="https://api.congress.gov">Congress.gov</a>, ZIP code districts from the <a href="https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html">Census Bureau</a>. Bill progress is inferred from each bill's latest action. <span id="generated"></span> <a href="methodology.html">Read the full methodology</a>.</p>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <nav aria-label="Site">
+        <a href="./">All members</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="privacy.html">Privacy policy</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <p>Congress Report Card is an independent project. It is not affiliated with Congress, any party or any campaign.</p>
+    </div>
+  </footer>
 
   <dialog id="card" aria-labelledby="card-name">
     <div class="card-body"></div>
@@ -83,5 +97,6 @@
 
   <script src="data/members.js"></script>
   <script src="app.js"></script>
+  <script src="ads.js"></script>
 </body>
 </html>

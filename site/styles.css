@@ -71,6 +71,7 @@ input:focus-visible, select:focus-visible, button:focus-visible, .member:focus-v
 .summary .n { display: block; font-size: 12px; color: var(--muted); }
 .summary .bar { height: 4px; border-radius: 2px; background: currentColor; margin-top: 6px; opacity: .8; }
 
+.zip-note { margin: 0 0 8px; padding: 10px 14px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); font-size: 14px; }
 .count { color: var(--muted); font-size: 14px; margin: 0 0 8px; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
@@ -124,7 +125,38 @@ dialog::backdrop { background: rgba(10,14,20,.55); }
 .method p { margin: 0; font-size: 14px; color: var(--muted); }
 .method .sources { margin-top: 24px; font-size: 13px; }
 
+/* Member, methodology, privacy and contact pages */
+.masthead.slim { padding: 16px 0; }
+.masthead .home { font-family: Georgia, "Times New Roman", serif; font-weight: 700; font-size: 20px; color: var(--ink); text-decoration: none; }
+.page { padding-top: 32px; padding-bottom: 16px; }
+.prose { max-width: 760px; }
+.prose h1 { font-size: clamp(28px, 4vw, 36px); }
+.prose h2 { font-family: Georgia, serif; font-size: 21px; margin: 32px 0 8px; }
+.prose p, .prose li { font-size: 16px; }
+.prose .lede { margin-bottom: 16px; }
+.prose table { border-collapse: collapse; margin: 12px 0; font-size: 15px; }
+.prose th, .prose td { text-align: left; padding: 6px 16px 6px 0; border-bottom: 1px solid var(--line); }
+.prose th { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+
+.profile { max-width: 760px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
+.profile h1 { margin: 0; font-size: 28px; line-height: 1.2; letter-spacing: 0; }
+.profile .meta { font-size: 14px; color: var(--muted); }
+.profile h2 { font-family: Georgia, serif; font-size: 19px; margin: 28px 0 8px; }
+.summary-text { font-size: 16px; margin: 0 0 20px; }
+.share-preview { display: block; width: 100%; max-width: 480px; height: auto; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 12px; }
+.buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+a.button { font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; text-decoration: none; }
+.buttons button:hover, a.button:hover { border-color: var(--accent); }
+.embed p { margin: 0 0 8px; font-size: 14px; color: var(--muted); }
+.embed textarea { display: block; width: 100%; font: 13px/1.4 Consolas, Menlo, monospace; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin-bottom: 8px; resize: vertical; }
+.fineprint { font-size: 13px; color: var(--muted); margin: 16px 0 0; }
+
+.site-footer { border-top: 1px solid var(--line); margin-top: 40px; padding: 24px 0 40px; font-size: 14px; color: var(--muted); }
+.site-footer nav { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 8px; }
+.site-footer p { margin: 0; }
+
 @media (max-width: 600px) {
+  .profile { padding: 16px; }
   .summary { grid-template-columns: repeat(5, 1fr); gap: 4px; }
   .summary button { padding: 8px; }
   .summary .n { font-size: 11px; }

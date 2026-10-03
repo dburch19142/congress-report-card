@@ -117,12 +117,63 @@ function seat(m) {
   if (DELEGATE_STATES.has(m.state)) return `Delegate · ${m.state}`;
   return m.district === 0 || m.district == null ? `Rep. · ${m.state} At-large` : `Rep. · ${m.state}-${m.district}`;
 }
+const districtKey = (m) => `${m.state}${m.district || 0}`;
+function districtLabel(key) {
+  const st = key.slice(0, 2), n = Number(key.slice(2));
+  if (DELEGATE_STATES.has(st)) return STATES[st];
+  return n ? `${st}-${n}` : `${st} At-large`;
+}
+
+// ZIP lookup. data/zips.js is about 500 KB, so it loads the first time someone types a ZIP.
+let zipState = "idle"; // idle → loading → ready | failed
+function loadZips() {
+  if (zipState !== "idle") return;
+  zipState = "loading";
+  const s = document.createElement("script");
+  s.src = "data/zips.js";
+  s.onload = () => { zipState = window.ZIP_DISTRICTS ? "ready" : "failed"; render(); };
+  s.onerror = () => { zipState = "failed"; render(); };
+  document.head.append(s);
+}
+
+// A search made only of digits is a ZIP code (ZIP+4 is accepted; the +4 is ignored).
+// Returns null for other searches, else the note to show and the matching test.
+function zipSearch(q) {
+  if (!/^\d[\d\s-]*$/.test(q)) return null;
+  const none = () => false;
+  const zip = /^\d{5}(-?\d{4})?$/.test(q) ? q.slice(0, 5) : null;
+  if (!zip) return { note: "Enter a 5-digit ZIP code to find your members of Congress.", match: none };
+  loadZips();
+  if (zipState === "loading") return { note: `Looking up ZIP code ${zip}…`, match: none };
+  if (zipState === "failed") return { note: "ZIP code lookup couldn't be loaded. Try again, or search by state.", match: none };
+  const districts = (window.ZIP_DISTRICTS[zip] || "").split(" ").filter(Boolean);
+  if (!districts.length) {
+    return { note: `ZIP code ${zip} wasn't found. ZIP codes used only for PO boxes or a single building aren't included. Try a nearby ZIP code.`, match: none };
+  }
+  const states = new Set(districts.map((d) => d.slice(0, 2)));
+  const seats = new Set(members.filter((m) => m.chamber === "House").map(districtKey));
+  const names = districts.map(districtLabel);
+  const list = names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names.at(-1)}` : names[0];
+  let note = districts.length === 1
+    ? `ZIP code ${zip} is in ${list}.`
+    : `ZIP code ${zip} covers parts of ${list}, so more than one House member is shown. <a href="https://www.house.gov/representatives/find-your-representative" target="_blank" rel="noopener">Look up yours by street address ↗</a>`;
+  const vacant = districts.filter((d) => !seats.has(d)).map(districtLabel);
+  if (vacant.length) note += ` The House seat for ${vacant.join(" and ")} is currently vacant.`;
+  return {
+    note,
+    match: (m) => (m.chamber === "Senate" ? states.has(m.state) : districts.includes(districtKey(m))),
+  };
+}
+
 function filtered() {
   const q = $("q").value.trim().toLowerCase();
   const ch = $("chamber").value, st = $("state").value, pa = $("party").value;
+  const zip = zipSearch(q);
+  $("zip-note").hidden = !zip;
+  $("zip-note").innerHTML = zip ? zip.note : "";
   let list = members.filter((m) =>
     (!ch || m.chamber === ch) && (!st || m.state === st) && (!pa || m.party === pa) &&
-    (!q || m.name.toLowerCase().includes(q) || m.state.toLowerCase() === q ||
+    (zip ? zip.match(m) : !q || m.name.toLowerCase().includes(q) || m.state.toLowerCase() === q ||
       (STATES[m.state] || "").toLowerCase().includes(q)));
   const sorts = {
     grade: (a, b) => (b.score ?? -1) - (a.score ?? -1),
@@ -207,6 +258,7 @@ function openCard(id) {
       ${b.notable.map((n) => `<li><span class="tag">${stageNames[n.stage]}</span><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.id)}: ${esc(n.title)}</a></li>`).join("")}
     </ul></div>` : ""}
     <div class="card-links">
+      <a href="members/${m.id}.html">Report card page, sharing and badge</a>
       <a href="https://www.congress.gov/member/${m.id}" target="_blank" rel="noopener">Full record on Congress.gov ↗</a>
       ${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">Official website ↗</a>` : ""}
     </div>`;

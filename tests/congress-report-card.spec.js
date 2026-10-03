@@ -381,6 +381,123 @@ test('10 More interactions', async ({ page }) => {
   await expect(count).toHaveText(`${total} of ${total} members`);
 });
 
+test('12 Search by ZIP code', async ({ page }) => {
+  const total = await memberCount(page);
+  const count = page.locator('#count');
+  const note = page.locator('#zip-note');
+  const cards = page.locator('#grid .member');
+  const search = page.locator('#q');
+
+  await expect(note).toBeHidden();
+
+  // A ZIP in one district: its representative and both senators
+  await search.fill('10001');
+  await expect(note).toHaveText('ZIP code 10001 is in NY-12.');
+  const expected = await page.evaluate(() => window.REPORT_DATA.members.filter((m) =>
+    m.state === 'NY' && (m.chamber === 'Senate' || m.district === 12)).length);
+  await expect(count).toHaveText(`${expected} of ${total} members`);
+  await expect(cards.filter({ hasText: /Senator · NY/ })).toHaveCount(2);
+  await expect(cards.filter({ hasNotText: /Senator · NY|Rep\. · NY-12/ })).toHaveCount(0);
+
+  // A ZIP split between districts lists each one and links to the address lookup
+  await search.fill('43215');
+  await expect(note).toContainText('covers parts of OH-15 and OH-3');
+  await expect(note.locator("a[href='https://www.house.gov/representatives/find-your-representative']")).toBeAttached();
+  await expect(cards.filter({ hasNotText: /Senator · OH|Rep\. · OH-(3|15)$/m })).toHaveCount(0);
+
+  // ZIP+4 works, and other filters still apply
+  await search.fill('43215-1234');
+  await page.locator('#chamber').selectOption({ label: 'Senate' });
+  await expect(cards).toHaveCount(2);
+  await page.locator('#chamber').selectOption({ label: 'Both chambers' });
+
+  await search.fill('432');
+  await expect(note).toHaveText('Enter a 5-digit ZIP code to find your members of Congress.');
+  await expect(cards).toHaveCount(0);
+
+  await search.fill('00000');
+  await expect(note).toContainText("ZIP code 00000 wasn't found.");
+  await expect(cards).toHaveCount(0);
+
+  // Clearing the search brings everyone back
+  await search.fill('');
+  await expect(note).toBeHidden();
+  await expect(count).toHaveText(`${total} of ${total} members`);
+});
+
+test('13 Member page, share image and badge', async ({ page, request }) => {
+  // What the home page says about the first few members
+  const sample = await page.evaluate(() => window.REPORT_DATA.members.slice(0, 5)
+    .map((m) => ({ id: m.id, name: m.name, grade: m.grade })));
+
+  // The member pages are graded by build_pages.py; they must agree with the home page
+  for (const m of sample) {
+    await page.goto(`/members/${m.id}.html`);
+    await expect(page.locator('#member-name')).toHaveText(m.name);
+    await expect(page.locator('.card-head .grade')).toHaveText(m.grade);
+    const title = await page.title();
+    expect(title.startsWith(`${m.name} (`), title).toBeTruthy();
+    expect(title.endsWith(`: Grade ${m.grade} | Congress Report Card`), title).toBeTruthy();
+  }
+
+  const m = sample[0];
+  await page.goto(`/members/${m.id}.html`);
+  await expect(page.locator('.summary-text')).toContainText(`overall grade of ${m.grade}`);
+  await expect(page.locator('.subject')).toHaveCount(3);
+  await expect(page.locator(`link[rel=canonical]`)).toHaveAttribute(
+    'href', `https://congressreportcard.org/members/${m.id}.html`);
+
+  // The share image is drawn in the browser and can be downloaded
+  await expect(page.locator('#share-preview')).toBeVisible();
+  const size = await page.locator('#share-preview').evaluate((img) => img.decode().then(() => [img.naturalWidth, img.naturalHeight]));
+  expect(size).toEqual([1200, 630]);
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    page.locator('#share-download').click(),
+  ]);
+  expect(download.suggestedFilename()).toMatch(/-report-card\.png$/);
+
+  // The badge shows the same grade, and the embed code points at the live site
+  const badge = await request.get(`/badges/${m.id}.svg`);
+  expect(badge.ok()).toBeTruthy();
+  expect(await badge.text()).toContain(`>${m.grade}</text>`);
+  await expect(page.locator('#embed-code')).toHaveValue(new RegExp(
+    `^<a href="https://congressreportcard\.org/members/${m.id}\.html"><img src="https://congressreportcard\.org/badges/${m.id}\.svg"`));
+
+  // The home page card links to the member page
+  await page.goto(`/?card#${m.id}`);
+  await page.locator(`#card a[href='members/${m.id}.html']`).click();
+  await expect(page.locator('#member-name')).toHaveText(m.name);
+});
+
+test('14 Methodology, privacy and contact pages', async ({ page, request }) => {
+  const footer = page.locator('.site-footer nav a');
+  await expect(footer).toHaveText(['All members', 'Methodology', 'Privacy policy', 'Contact']);
+
+  await footer.filter({ hasText: 'Methodology' }).click();
+  await expect(page.locator('h1')).toHaveText('How grades are calculated');
+  await expect(page).toHaveTitle('How grades are calculated | Congress Report Card');
+
+  await page.locator('.site-footer nav a', { hasText: 'Privacy policy' }).click();
+  await expect(page.locator('h1')).toHaveText('Privacy policy');
+  await expect(page.locator('main')).toContainText(/Last updated \w+ \d{1,2}, \d{4}/);
+  await expect(page.locator('main')).toContainText('Google AdSense');
+  await expect(page.locator("main a[href^='mailto:']")).toBeAttached();
+
+  await page.locator('.site-footer nav a', { hasText: 'Contact' }).click();
+  await expect(page.locator('h1')).toHaveText('Contact');
+  await expect(page.locator("main a[href^='mailto:']")).toBeAttached();
+
+  await page.locator('.site-footer nav a', { hasText: 'All members' }).click();
+  await expect(page.locator('#grid .member').first()).toBeAttached();
+
+  // Search engines: robots.txt points at a sitemap listing every member page
+  expect(await (await request.get('/robots.txt')).text()).toContain('Sitemap: https://congressreportcard.org/sitemap.xml');
+  const sitemap = await (await request.get('/sitemap.xml')).text();
+  const total = await memberCount(page);
+  expect(sitemap.match(/\/members\/[A-Z]\d{6}\.html<\/loc>/g)).toHaveLength(total);
+});
+
 test.describe('phone', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 

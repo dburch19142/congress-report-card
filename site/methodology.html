@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How grades are calculated | Congress Report Card</title>
+  <meta name="description" content="How Congress Report Card turns vote attendance, bills written and bills supported into a letter grade for every member of Congress.">
+  <link rel="canonical" href="https://congressreportcard.org/methodology.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="masthead slim">
+    <div class="wrap"><a class="home" href="./">Congress Report Card</a></div>
+  </header>
+
+  <main class="wrap page prose">
+    <h1>How grades are calculated</h1>
+    <p class="lede">Every grade comes from the public record of the current Congress. No opinions, endorsements or positions on issues go into it. A member's party and how they vote have no effect on the grade.</p>
+
+    <h2>The three scores</h2>
+    <p>Each member gets three scores from 0 to 100. The overall grade is their weighted average.</p>
+    <table>
+      <thead><tr><th>Score</th><th>Weight</th><th>What it measures</th></tr></thead>
+      <tbody>
+        <tr><td>Vote attendance</td><td>40%</td><td>Share of roll-call votes the member cast</td></tr>
+        <tr><td>Bills written</td><td>35%</td><td>Bills the member sponsored, and how far each one got</td></tr>
+        <tr><td>Bills supported</td><td>25%</td><td>Number of bills the member cosponsored</td></tr>
+      </tbody>
+    </table>
+    <p>On the home page you can change these weights with <strong>Adjust grading</strong>. Member pages, badges and share images always use the standard weights above.</p>
+
+    <h2 id="attendance">Vote attendance</h2>
+    <p>This is the share of roll-call votes the member cast while in office. Voting "present" counts as attending. Votes held before a member was sworn in or after they left are not counted.</p>
+    <p>100% attendance scores 100 points and 85% or lower scores 0, on a straight line in between. For example, 97% attendance scores 80 points and 92.5% scores 50.</p>
+    <ul>
+      <li>By custom the Speaker of the House votes only occasionally, so votes skipped as Speaker aren't counted against them.</li>
+      <li>Delegates from DC and the territories may vote only in the Committee of the Whole. They are counted only on the votes they are allowed to cast.</li>
+    </ul>
+
+    <h2 id="sponsored">Bills written</h2>
+    <p>This counts the bills and joint resolutions the member sponsored. Each one earns points for how far it got:</p>
+    <table>
+      <thead><tr><th>Furthest stage</th><th>Points</th></tr></thead>
+      <tbody>
+        <tr><td>Introduced</td><td>1</td></tr>
+        <tr><td>Acted on in committee</td><td>3</td></tr>
+        <tr><td>Passed a chamber</td><td>6</td></tr>
+        <tr><td>Became law</td><td>10</td></tr>
+      </tbody>
+    </table>
+    <p>The member's point total is then ranked against the other members of their own chamber. The top member scores 100, the chamber average scores 75 (a C) and the lowest scores 50. Senators are compared only with senators and House members only with House members.</p>
+    <p>Simple and concurrent resolutions, such as commemorations, can't become law and don't count.</p>
+
+    <h2 id="cosponsored">Bills supported</h2>
+    <p>This is the number of bills and joint resolutions the member cosponsored, ranked within their chamber the same way: 100 for the top member, 75 for the average and 50 for the lowest.</p>
+
+    <h2 id="letters">Letter grades</h2>
+    <table>
+      <thead><tr><th>Grade</th><th>Score</th><th>Grade</th><th>Score</th></tr></thead>
+      <tbody>
+        <tr><td>A</td><td>93 and up</td><td>C</td><td>73 to 76</td></tr>
+        <tr><td>A−</td><td>90 to 92</td><td>C−</td><td>70 to 72</td></tr>
+        <tr><td>B+</td><td>87 to 89</td><td>D+</td><td>67 to 69</td></tr>
+        <tr><td>B</td><td>83 to 86</td><td>D</td><td>63 to 66</td></tr>
+        <tr><td>B−</td><td>80 to 82</td><td>D−</td><td>60 to 62</td></tr>
+        <tr><td>C+</td><td>77 to 79</td><td>F</td><td>Below 60</td></tr>
+      </tbody>
+    </table>
+    <p>A member who was in office for fewer than half of their chamber's roll calls gets a <em>partial term</em> label. Their bill counts cover less time than other members', so read those grades with care.</p>
+
+    <h2 id="limits">What the grades don't measure</h2>
+    <ul>
+      <li>Committee work, constituent service, negotiation and leadership roles are not in the public data used here.</li>
+      <li>The grades say nothing about whether a bill is good or bad, or whether a vote was right or wrong.</li>
+      <li>Bill progress is read from each bill's latest action, so it is an approximation.</li>
+      <li>Members of the minority party and newer members often find it harder to move bills. Bills written and bills supported are ranked within the chamber, not within the party.</li>
+    </ul>
+
+    <h2 id="zip">ZIP code search</h2>
+    <p>The ZIP code search uses the Census Bureau's list of which congressional districts each ZIP code area touches. About 15% of ZIP codes cross a district line. For those, the site shows every House member who represents part of the ZIP code. ZIP codes used only for PO boxes or a single building are not in the Census data.</p>
+
+    <h2 id="sources">Sources and updates</h2>
+    <ul>
+      <li>Rosters: <a href="https://github.com/unitedstates/congress-legislators">congress-legislators</a></li>
+      <li>Roll-call votes: <a href="https://voteview.com">Voteview</a></li>
+      <li>Legislation: <a href="https://api.congress.gov">Congress.gov</a></li>
+      <li>ZIP code districts: <a href="https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html">Census Bureau</a></li>
+      <li>Photos: <a href="https://github.com/unitedstates/images">unitedstates/images</a></li>
+    </ul>
+    <p>The data is rebuilt every night. The code that builds the data and calculates the grades is public on <a href="https://github.com/dburch19142/congress-report-card">GitHub</a>. If you find a mistake, please <a href="contact.html">get in touch</a>.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <nav aria-label="Site">
+        <a href="./">All members</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="privacy.html">Privacy policy</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <p>Congress Report Card is an independent project. It is not affiliated with Congress, any party or any campaign.</p>
+    </div>
+  </footer>
+  <script src="ads.js"></script>
+</body>
+</html>
