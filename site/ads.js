@@ -6,7 +6,7 @@
 // one per placement to see in AdSense which placement earns what.
 const AD_CLIENT = "ca-pub-7873162278456307";
 const AD_SLOTS = {
-  home: "",    // home page, between the grade summary and the list of members
+  home: "",    // home page, below the list of members
   member: "",  // member pages, between the scores and the share buttons
   page: "",    // end of the methodology page and the weekly digest
 };
