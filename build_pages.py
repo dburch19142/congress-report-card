@@ -4,7 +4,7 @@ Builds the static pages that are generated from site/data/members.js:
   site/members/<id>.html   one page per member (name, district and grade in the title)
   site/badges/<id>.svg     embeddable grade badge
   site/sitemap.xml         for search engines
-  site/ads.txt             only when an AdSense publisher ID is set in site/ads.js
+  site/ads.txt             tells ad buyers that Google may sell this site's ad space
 
 These files are not committed. The deploy workflows run this script just before publishing,
 so the pages always match the nightly data. Run it by hand to preview the site locally:
@@ -15,7 +15,6 @@ The grading below must stay in step with GRADING in site/app.js, which grades th
 data in the browser. tests/congress-report-card.spec.js checks that the two agree.
 """
 import json
-import re
 import shutil
 from html import escape
 
@@ -23,6 +22,11 @@ from build_data import OUT as DATA_FILE, ROOT
 
 SITE = ROOT / "site"
 SITE_URL = "https://congressreportcard.org"
+
+# Google AdSense. The same snippet is in the <head> of the hand-written pages in site/.
+ADSENSE_PUBLISHER = "pub-7873162278456307"
+ADSENSE_SNIPPET = (f'<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
+                   f'?client=ca-{ADSENSE_PUBLISHER}"\n     crossorigin="anonymous"></script>')
 
 # ---------------------------------------------------------------- grading (mirrors app.js)
 GRADING = {
@@ -297,6 +301,7 @@ def member_page(m, data):
   <meta property="og:description" content="{e(description)}">
   <meta property="og:url" content="{url}">
   <link rel="stylesheet" href="../styles.css">
+  {ADSENSE_SNIPPET}
 </head>
 <body>
   <header class="masthead slim">
@@ -354,7 +359,6 @@ def member_page(m, data):
   </main>
 
   {footer("../")}
-  <script src="../ads.js"></script>
   <script src="../analytics.js"></script>
   <script src="../share.js"></script>
 </body>
@@ -403,14 +407,8 @@ def main():
     write(SITE / "sitemap.xml", sitemap(members, data["generated"]))
     print(f"Wrote {len(members)} member pages, {len(members)} badges and sitemap.xml")
 
-    # ads.txt tells ad buyers that Google is allowed to sell this site's ad space.
-    client = re.search(r'ADSENSE_CLIENT\s*=\s*"ca-(pub-\d+)"', (SITE / "ads.js").read_text(encoding="utf-8"))
-    ads_txt = SITE / "ads.txt"
-    if client:
-        write(ads_txt, f"google.com, {client.group(1)}, DIRECT, f08c47fec0942fa0\n")
-        print("Wrote ads.txt")
-    elif ads_txt.exists():
-        ads_txt.unlink()
+    write(SITE / "ads.txt", f"google.com, {ADSENSE_PUBLISHER}, DIRECT, f08c47fec0942fa0\n")
+    print("Wrote ads.txt")
 
 
 if __name__ == "__main__":

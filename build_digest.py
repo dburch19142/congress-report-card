@@ -23,7 +23,8 @@ from email.utils import format_datetime
 from html import escape
 
 from build_data import OUT as DATA_FILE, ROOT
-from build_pages import PARTY, SITE, SITE_URL, compute_grades, district, footer, plural, write
+from build_pages import (ADSENSE_SNIPPET, PARTY, SITE, SITE_URL, compute_grades, district, footer,
+                         plural, write)
 
 SNAPSHOT = ROOT / "digest_snapshot.json"
 OUT_DIR = SITE / "digest"
@@ -175,6 +176,7 @@ def digest_page(body, title, end):
   <link rel="canonical" href="{url}">
   <link rel="alternate" type="application/rss+xml" title="Congress Report Card weekly digest" href="feed.xml">
   <link rel="stylesheet" href="../styles.css">
+  {ADSENSE_SNIPPET}
 </head>
 <body>
   <header class="masthead slim">
@@ -202,7 +204,6 @@ def digest_page(body, title, end):
   </main>
 
   {footer("../")}
-  <script src="../ads.js"></script>
   <script src="../analytics.js"></script>
   <script src="../signup.js"></script>
   <script>

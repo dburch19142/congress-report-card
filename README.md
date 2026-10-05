@@ -89,10 +89,11 @@ The numbers are on the GoatCounter dashboard at `https://<code>.goatcounter.com`
 
 ## Ads
 
-Ads are off until a publisher ID is set. After AdSense approves the site:
+Every page has the Google AdSense snippet in its `<head>`. The publisher ID appears in the four
+hand-written pages in `site/` and in `ADSENSE_PUBLISHER` in `build_pages.py`, which also writes
+`ads.txt` at deploy time. Ads only show once AdSense has approved the site. After approval:
 
-1. Paste the publisher ID into `ADSENSE_CLIENT` in `site/ads.js`. The next deploy loads the
-   AdSense script on every page and publishes `ads.txt`.
+1. In AdSense, turn on Auto ads for the site, or ask for fixed ad slots to be added to the pages.
 2. In AdSense, open **Privacy & messaging → European regulations** and create the consent
    message. Google shows it to visitors in Europe through the same script.
 3. In AdSense, open **Brand safety → Content → Blocking controls → Sensitive categories** and
