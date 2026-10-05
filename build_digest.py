@@ -175,6 +175,9 @@ def digest_page(body, title, end):
   <meta name="description" content="Weekly digest for the week ending {long_date(end)}: missed votes, grade changes and bills that became law.">
   <link rel="canonical" href="{url}">
   <link rel="alternate" type="application/rss+xml" title="Congress Report Card weekly digest" href="feed.xml">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../favicon.png" type="image/png" sizes="64x64">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
   <link rel="stylesheet" href="../styles.css">
   {ADSENSE_SNIPPET}
 </head>

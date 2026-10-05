@@ -505,6 +505,12 @@ test('14 Methodology, privacy and contact pages', async ({ page, request }) => {
   await expect(page).toHaveURL(/\/\?utm_source=tiktok$/);
   await expect(page.locator('#grid .member').first()).toBeAttached();
 
+  // The browser tab shows the flag icon
+  await expect(page.locator("link[rel='icon'][type='image/svg+xml']")).toHaveAttribute('href', 'favicon.svg');
+  for (const icon of ['/favicon.svg', '/favicon.png', '/favicon.ico', '/apple-touch-icon.png']) {
+    expect((await request.get(icon)).ok(), icon).toBeTruthy();
+  }
+
   // Search engines: robots.txt points at a sitemap listing every member page
   expect(await (await request.get('/robots.txt')).text()).toContain('Sitemap: https://congressreportcard.org/sitemap.xml');
   const sitemap = await (await request.get('/sitemap.xml')).text();

@@ -300,6 +300,9 @@ def member_page(m, data):
   <meta property="og:title" content="{e(m['name'])} ({party}, {district(m)}): Grade {m['grade']}">
   <meta property="og:description" content="{e(description)}">
   <meta property="og:url" content="{url}">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../favicon.png" type="image/png" sizes="64x64">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
   <link rel="stylesheet" href="../styles.css">
   {ADSENSE_SNIPPET}
 </head>

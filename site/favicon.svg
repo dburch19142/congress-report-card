@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<title>American flag</title>
+<clipPath id="c"><rect y="4" width="32" height="24" rx="2.5"/></clipPath>
+<g clip-path="url(#c)">
+<rect y="4" width="32" height="24" fill="#fff"/>
+<rect y="4.000" width="32" height="1.846" fill="#b22234"/><rect y="7.692" width="32" height="1.846" fill="#b22234"/><rect y="11.385" width="32" height="1.846" fill="#b22234"/><rect y="15.077" width="32" height="1.846" fill="#b22234"/><rect y="18.769" width="32" height="1.846" fill="#b22234"/><rect y="22.462" width="32" height="1.846" fill="#b22234"/><rect y="26.154" width="32" height="1.846" fill="#b22234"/>
+<rect y="4" width="15" height="12.923" fill="#3c3b6e"/>
+<circle cx="2.5" cy="6.6" r="0.9" fill="#fff"/><circle cx="6.5" cy="6.6" r="0.9" fill="#fff"/><circle cx="10.5" cy="6.6" r="0.9" fill="#fff"/><circle cx="4.5" cy="10.4" r="0.9" fill="#fff"/><circle cx="8.5" cy="10.4" r="0.9" fill="#fff"/><circle cx="12.5" cy="10.4" r="0.9" fill="#fff"/><circle cx="2.5" cy="14.2" r="0.9" fill="#fff"/><circle cx="6.5" cy="14.2" r="0.9" fill="#fff"/><circle cx="10.5" cy="14.2" r="0.9" fill="#fff"/>
+</g>
+</svg>
