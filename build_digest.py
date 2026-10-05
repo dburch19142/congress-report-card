@@ -200,10 +200,13 @@ def digest_page(body, title, end):
       {body}
     </article>
 
+    <div class="ad-slot" data-ad="page"></div>
+
     <section class="signup" id="signup" hidden></section>
   </main>
 
   {footer("../")}
+  <script src="../ads.js"></script>
   <script src="../analytics.js"></script>
   <script src="../signup.js"></script>
   <script>

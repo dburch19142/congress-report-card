@@ -532,6 +532,36 @@ test('15 Weekly digest and email sign-up', async ({ page, request }) => {
   expect((Date.now() - ended) / 86400000).toBeLessThan(9);
 });
 
+test('16 Ad slots', async ({ page }) => {
+  // Where ads may appear. The privacy and contact pages carry none.
+  const expected = {
+    '/': ['home'],
+    '/methodology.html': ['page'],
+    '/digest/': ['page'],
+    '/privacy.html': [],
+    '/contact.html': [],
+  };
+  const memberId = await page.evaluate(() => window.REPORT_DATA.members[0].id);
+  expected[`/members/${memberId}.html`] = ['member'];
+
+  for (const [path, slots] of Object.entries(expected)) {
+    await page.goto(path);
+    const found = await page.locator('.ad-slot').evaluateAll((els) => els.map((e) => e.dataset.ad));
+    expect(found, path).toEqual(slots);
+    if (!slots.length) continue;
+
+    // A slot shows an ad only when its ad unit ID is set in ads.js; otherwise it stays empty
+    const configured = await page.evaluate((name) => Boolean(AD_SLOTS[name]), slots[0]);
+    const slot = page.locator('.ad-slot');
+    if (configured) {
+      await expect(slot.locator('ins.adsbygoogle')).toHaveAttribute('data-ad-client', 'ca-pub-7873162278456307');
+      await expect(slot.locator('.ad-label')).toHaveText('Advertisement');
+    } else {
+      await expect(slot).toBeEmpty();
+    }
+  }
+});
+
 test.describe('phone', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 

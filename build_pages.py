@@ -329,6 +329,8 @@ def member_page(m, data):
       </div>
       {f'<div class="advanced"><h4>Bills that advanced</h4><ul class="notable">{notable}</ul></div>' if notable else ''}
 
+      <div class="ad-slot" data-ad="member"></div>
+
       <section class="share" id="share" data-card="{e(json.dumps(card))}">
         <h2>Share this grade</h2>
         <img class="share-preview" id="share-preview" alt="Image card showing the grade for {e(m['name'])}" hidden>
@@ -359,6 +361,7 @@ def member_page(m, data):
   </main>
 
   {footer("../")}
+  <script src="../ads.js"></script>
   <script src="../analytics.js"></script>
   <script src="../share.js"></script>
 </body>

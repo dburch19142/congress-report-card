@@ -93,7 +93,9 @@ Every page has the Google AdSense snippet in its `<head>`. The publisher ID appe
 hand-written pages in `site/` and in `ADSENSE_PUBLISHER` in `build_pages.py`, which also writes
 `ads.txt` at deploy time. Ads only show once AdSense has approved the site. After approval:
 
-1. In AdSense, turn on Auto ads for the site, or ask for fixed ad slots to be added to the pages.
+1. Create a responsive display ad unit in AdSense and put its ID in `AD_SLOTS` in `site/ads.js`.
+   The pages have fixed slots (`<div class="ad-slot">`) on the home page, member pages, the
+   methodology page and the weekly digest. A slot stays empty until its ID is set.
 2. In AdSense, open **Privacy & messaging → European regulations** and create the consent
    message. Google shows it to visitors in Europe through the same script.
 3. In AdSense, open **Brand safety → Content → Blocking controls → Sensitive categories** and
