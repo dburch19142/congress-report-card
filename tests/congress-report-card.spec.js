@@ -457,6 +457,15 @@ test('13 Member page, share image and badge', async ({ page, request }) => {
   ]);
   expect(download.suggestedFilename()).toMatch(/-report-card\.png$/);
 
+  // The tall version for TikTok is 1080 by 1920
+  const [tall] = await Promise.all([
+    page.waitForEvent('download'),
+    page.locator('#share-download-tall').click(),
+  ]);
+  expect(tall.suggestedFilename()).toMatch(/-report-card-tall\.png$/);
+  const png = require('fs').readFileSync(await tall.path());
+  expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1080, 1920]);
+
   // The badge shows the same grade, and the embed code points at the live site
   const badge = await request.get(`/badges/${m.id}.svg`);
   expect(badge.ok()).toBeTruthy();
@@ -489,6 +498,11 @@ test('14 Methodology, privacy and contact pages', async ({ page, request }) => {
   await expect(page.locator("main a[href^='mailto:']")).toBeAttached();
 
   await page.locator('.site-footer nav a', { hasText: 'All members' }).click();
+  await expect(page.locator('#grid .member').first()).toBeAttached();
+
+  // The short link for the TikTok profile lands on the home page, tagged for the visitor counter
+  await page.goto('/tiktok/');
+  await expect(page).toHaveURL(/\/\?utm_source=tiktok$/);
   await expect(page.locator('#grid .member').first()).toBeAttached();
 
   // Search engines: robots.txt points at a sitemap listing every member page

@@ -337,6 +337,7 @@ def member_page(m, data):
         <div class="buttons">
           <button id="share-native" hidden>Share…</button>
           <button id="share-download">Download image</button>
+          <button id="share-download-tall">Download tall image for TikTok</button>
           <button id="share-copy">Copy link</button>
           <a class="button" href="https://twitter.com/intent/tweet?text={e(share_text.replace(' ', '%20'))}&amp;url={url}" target="_blank" rel="noopener">Post on X ↗</a>
           <a class="button" href="https://www.facebook.com/sharer/sharer.php?u={url}" target="_blank" rel="noopener">Share on Facebook ↗</a>

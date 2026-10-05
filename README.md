@@ -87,6 +87,9 @@ Visits are counted by [GoatCounter](https://www.goatcounter.com), which uses no 
 code is set in `GOATCOUNTER_CODE` in `site/analytics.js`; while it is empty nothing is counted.
 The numbers are on the GoatCounter dashboard at `https://<code>.goatcounter.com`.
 
+`https://congressreportcard.org/tiktok` is a short link for the TikTok profile. It forwards to the
+home page with `utm_source=tiktok`, so those visits are listed under Referrers as "tiktok".
+
 ## Ads
 
 Every page has the Google AdSense snippet in its `<head>`. The publisher ID appears in the four
