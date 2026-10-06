@@ -117,8 +117,10 @@ python reel/make_reel.py
 
 This counts the numbers shown in the video from `site/data/members.js`, writes the background
 music (`reel/make_music.py` synthesizes it, so there is nothing to license) and saves
-`reel/congress-report-card-reel.mp4`. The video and the music file are not committed. Run it
-again after a data update to refresh the numbers.
+`reel/congress-report-card-reel.mp4`, plus `reel/congress-report-card-tiktok.mp4`, a TikTok version
+laid out around TikTok's buttons that shows the `congressreportcard.org/tiktok` short link. The
+videos and the music file are not committed. Run it again after a data update to refresh the
+numbers.
 
 ## Data sources
 

@@ -8,7 +8,11 @@
      writes from site/data/members.js.
 
      Reels covers the top of the frame, the bottom third and the right edge with its own
-     buttons and caption, so everything that matters sits between y=270 and y=1270. -->
+     buttons and caption, so everything that matters sits between y=270 and y=1270.
+
+     reel.html#tiktok is the TikTok version. TikTok's buttons take more of the right edge, so
+     the content moves left, and the address is the /tiktok short link so that visits from the
+     video are counted as coming from TikTok. -->
 <style>
   :root {
     --bg: #0f1b2d; --ink: #f7f6f2; --muted: #9fb0c6; --gold: #e3bf4f; --accent: #1f3a5f;
@@ -93,6 +97,10 @@
     font-size: 58px; font-weight: 700; letter-spacing: -.01em; box-shadow: 0 18px 50px rgba(0, 0, 0, .35);
   }
   .fine { margin-top: 44px; font-size: 32px; line-height: 1.4; color: var(--muted); }
+
+  .tiktok .brand { right: 100px; }
+  .tiktok .scene { left: 60px; right: 160px; }
+  .tiktok .url { font-size: 50px; padding: 28px 40px; }
 </style>
 </head>
 <body>
@@ -148,7 +156,7 @@
     <p class="sub up" style="--d: 17500ms">Election Day is <span class="gold">November 3</span>.</p>
     <div class="gap" style="height: 22px"></div>
     <h2 class="up" style="--d: 17800ms">See their grade<br>before you vote.</h2>
-    <p class="url pop" style="--d: 18500ms">congressreportcard.org</p>
+    <p class="url pop" id="url" style="--d: 18500ms">congressreportcard.org</p>
     <p class="fine up" style="--d: 19100ms">Free. Independent. Not affiliated with<br>any party or campaign.</p>
   </section>
 </div>
@@ -164,6 +172,10 @@
   const LETTERS = Object.keys(COLORS);
   const ZIP = "90210";
 
+  if (location.hash.includes("tiktok")) {
+    $("stage").classList.add("tiktok");
+    $("url").textContent += "/tiktok";
+  }
   $("total").textContent = S.members;
   $("missed50").textContent = S.missed50;
   const tallest = Math.max(...LETTERS.map((l) => S.grades[l]));
