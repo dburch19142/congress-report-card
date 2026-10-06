@@ -21,6 +21,8 @@ const STATES = {AL:"Alabama",AK:"Alaska",AS:"American Samoa",AZ:"Arizona",AR:"Ar
 const DELEGATE_STATES = new Set(["DC", "PR", "GU", "AS", "VI", "MP"]);
 const SPEAKER_ID = "J000299"; // Speaker of the House votes only at their discretion
 
+const WEIGHT_TOTAL = 100, WEIGHT_STEP = 5;
+
 const data = window.REPORT_DATA;
 const members = data.members;
 let weights = loadWeights();
@@ -82,9 +84,22 @@ function computeGrades() {
 function loadWeights() {
   try {
     const saved = JSON.parse(localStorage.getItem("rc-weights"));
-    if (saved && Object.keys(GRADING.weights).every((k) => typeof saved[k] === "number")) return saved;
+    const keys = Object.keys(GRADING.weights);
+    if (saved && keys.every((k) => typeof saved[k] === "number" && saved[k] >= 0)
+        && keys.reduce((sum, k) => sum + saved[k], 0) === WEIGHT_TOTAL) return saved;
   } catch {}
   return { ...GRADING.weights };
+}
+
+// The three weights always add up to WEIGHT_TOTAL. Moving one slider shares what
+// is left between the other two, keeping their ratio (an even split if both are 0).
+function setWeight(key, value) {
+  const [a, b] = Object.keys(GRADING.weights).filter((k) => k !== key);
+  const rest = WEIGHT_TOTAL - value, others = weights[a] + weights[b];
+  const share = others ? (rest * weights[a]) / others : rest / 2;
+  weights[key] = value;
+  weights[a] = Math.round(share / WEIGHT_STEP) * WEIGHT_STEP;
+  weights[b] = rest - weights[a];
 }
 function saveWeights() {
   try { localStorage.setItem("rc-weights", JSON.stringify(weights)); } catch {}
@@ -95,11 +110,14 @@ function renderSliders() {
   box.innerHTML = Object.keys(GRADING.weights).map((k) => {
     const disabled = k !== "attendance" && !data.hasBills;
     return `<div><label for="w-${k}"><span>${LABELS[k]}</span><span id="wv-${k}">${weights[k]}</span></label>
-      <input type="range" id="w-${k}" data-k="${k}" min="0" max="100" step="5" value="${weights[k]}" ${disabled ? "disabled" : ""}></div>`;
+      <input type="range" id="w-${k}" data-k="${k}" min="0" max="${WEIGHT_TOTAL}" step="${WEIGHT_STEP}" value="${weights[k]}" ${disabled ? "disabled" : ""}></div>`;
   }).join("");
   box.querySelectorAll("input").forEach((el) => el.addEventListener("input", () => {
-    weights[el.dataset.k] = Number(el.value);
-    document.getElementById(`wv-${el.dataset.k}`).textContent = el.value;
+    setWeight(el.dataset.k, Number(el.value));
+    for (const k of Object.keys(GRADING.weights)) {
+      document.getElementById(`w-${k}`).value = weights[k];
+      document.getElementById(`wv-${k}`).textContent = weights[k];
+    }
     saveWeights(); computeGrades(); render();
   }));
 }

@@ -1526,9 +1526,9 @@
         },
         {
           "id": "069dec20-8761-4752-a69a-9d6feda89f29",
-          "comment": "All weights zero: nobody can be graded",
+          "comment": "Moving one slider rebalances the other two so the total stays 100",
           "command": "runScript",
-          "target": "['attendance','sponsored','cosponsored'].forEach(k=>{const s=document.getElementById('w-'+k); s.value=0; s.dispatchEvent(new Event('input'))})",
+          "target": "[['sponsored',50],['cosponsored',20]].forEach(([k,v])=>{const s=document.getElementById('w-'+k); s.value=v; s.dispatchEvent(new Event('input'))})",
           "targets": [],
           "value": ""
         },
@@ -1536,17 +1536,17 @@
           "id": "f92e6281-e319-4fc1-8c96-489c0ce40fc1",
           "comment": "",
           "command": "executeScript",
-          "target": "return [...document.querySelectorAll('#grid .member')].every(e => e.querySelector('.grade').textContent.trim() === '—')",
+          "target": "return ['attendance','sponsored','cosponsored'].map(k => document.getElementById('w-'+k).value).join('/')",
           "targets": [],
-          "value": "allUngraded"
+          "value": "rebalanced"
         },
         {
           "id": "27ae1f20-987c-41b5-849a-cfe688303fa2",
           "comment": "",
           "command": "assert",
-          "target": "allUngraded",
+          "target": "rebalanced",
           "targets": [],
-          "value": "true"
+          "value": "40/40/20"
         },
         {
           "id": "ccb984cd-8a0e-4103-bb04-9e97f4c45d86",

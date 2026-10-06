@@ -250,12 +250,17 @@ test('07 Adjust grading weights', async ({ page }) => {
   await card.locator('.close').click();
   await expect(card).toBeHidden();
 
-  // All weights zero: nobody can be graded
+  // Moving one slider rebalances the other two so the total stays 100
   await button.click();
-  for (const key of ['attendance', 'sponsored', 'cosponsored']) {
-    await page.locator(`#w-${key}`).fill('0');
-  }
-  expect((await gridGrades(page)).filter((g) => g !== '—')).toEqual([]);
+  await page.locator('#w-sponsored').fill('50');
+  await expect(page.locator('#w-attendance')).toHaveValue('50');
+  await expect(page.locator('#w-cosponsored')).toHaveValue('0');
+  await page.locator('#w-cosponsored').fill('20');
+  await expect(page.locator('#wv-attendance')).toHaveText('40');
+  await expect(page.locator('#wv-sponsored')).toHaveText('40');
+  await expect(page.locator('#wv-cosponsored')).toHaveText('20');
+  expect(await page.evaluate(() => localStorage.getItem('rc-weights')))
+    .toBe('{"attendance":40,"sponsored":40,"cosponsored":20}');
 
   await page.locator('#reset-weights').click();
   await expect(page.locator('#wv-attendance')).toHaveText('40');
