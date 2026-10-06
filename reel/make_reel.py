@@ -1,10 +1,15 @@
 """
-Builds the Facebook Reel that advertises the site: reel/congress-report-card-reel.mp4
-(1080×1920, 22 seconds, H.264 with the background music from make_music.py).
+Builds the videos that advertise the site (1080×1920, 22 seconds, H.264 with the background
+music from make_music.py):
+
+  reel/congress-report-card-reel.mp4     for Facebook Reels
+  reel/congress-report-card-tiktok.mp4   for TikTok: laid out around TikTok's buttons, and
+                                         it shows the congressreportcard.org/tiktok short link
 
   pip install imageio-ffmpeg numpy
   npm install
-  python reel/make_reel.py
+  python reel/make_reel.py            both videos
+  python reel/make_reel.py tiktok     only one (facebook or tiktok)
 
 The numbers in the video are counted from site/data/members.js with the same grading as the
 site, so run this again after a data update to refresh them. The animation itself is
@@ -26,7 +31,8 @@ import build_pages  # noqa: E402
 import make_music  # noqa: E402
 
 FPS = 30
-OUT = HERE / "congress-report-card-reel.mp4"
+OUT = {"facebook": HERE / "congress-report-card-reel.mp4",
+       "tiktok": HERE / "congress-report-card-tiktok.mp4"}
 
 
 def stats():
@@ -49,16 +55,22 @@ def main():
 
     make_music.main()
 
+    for version in sys.argv[1:] or OUT:
+        render(version)
+
+
+def render(version):
     with tempfile.TemporaryDirectory() as frames:
-        subprocess.run(["node", str(HERE / "render.js"), frames, str(FPS)], check=True, cwd=HERE.parent)
+        subprocess.run(["node", str(HERE / "render.js"), frames, str(FPS), version],
+                       check=True, cwd=HERE.parent)
         subprocess.run([
             imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error",
             "-framerate", str(FPS), "-i", str(Path(frames) / "f_%04d.png"),
             "-i", str(make_music.OUT),
             "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-pix_fmt", "yuv420p",
-            "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", str(OUT),
+            "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", str(OUT[version]),
         ], check=True)
-    print(f"Wrote {OUT}")
+        print(f"Wrote {OUT[version]}")
 
 
 if __name__ == "__main__":
