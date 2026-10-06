@@ -104,6 +104,22 @@ hand-written pages in `site/` and in `ADSENSE_PUBLISHER` in `build_pages.py`, wh
 3. In AdSense, open **Brand safety → Content → Blocking controls → Sensitive categories** and
    block **Politics**, so ads don't make the grades look biased.
 
+## Facebook Reel
+
+`reel/` holds a 22-second vertical video (1080×1920) that advertises the site. `reel/reel.html` is
+the animation; open it in a browser to preview it. To build the MP4:
+
+```powershell
+pip install imageio-ffmpeg numpy
+npm install
+python reel/make_reel.py
+```
+
+This counts the numbers shown in the video from `site/data/members.js`, writes the background
+music (`reel/make_music.py` synthesizes it, so there is nothing to license) and saves
+`reel/congress-report-card-reel.mp4`. The video and the music file are not committed. Run it
+again after a data update to refresh the numbers.
+
 ## Data sources
 
 - Roster: [unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators)

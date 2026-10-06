@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Congress Report Card reel</title>
+<!-- A 22-second vertical video (1080×1920) for Facebook Reels. Open this file to watch it play;
+     make_reel.py turns it into an MP4. The numbers come from stats.js, which make_reel.py
+     writes from site/data/members.js.
+
+     Reels covers the top of the frame, the bottom third and the right edge with its own
+     buttons and caption, so everything that matters sits between y=270 and y=1270. -->
+<style>
+  :root {
+    --bg: #0f1b2d; --ink: #f7f6f2; --muted: #9fb0c6; --gold: #e3bf4f; --accent: #1f3a5f;
+    --ga: #5cc48d; --gb: #9ccc6a; --gc: #e3bf4f; --gd: #ec9a5b; --gf: #ec7d74;
+    --sans: "Segoe UI", system-ui, -apple-system, sans-serif;
+    --serif: Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; background: #000; overflow: hidden; }
+  #stage {
+    position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden;
+    transform-origin: 0 0; color: var(--ink); font-family: var(--sans);
+    background: radial-gradient(1200px 900px at 50% 38%, #1b3152 0%, var(--bg) 70%);
+  }
+  .brand {
+    position: absolute; top: 285px; left: 0; right: 0; text-align: center;
+    font-size: 30px; font-weight: 600; letter-spacing: .14em; color: var(--muted);
+  }
+  .scene {
+    position: absolute; left: 90px; right: 90px; top: 350px; height: 920px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; opacity: 0;
+    animation: scene var(--len) linear var(--at) both;
+  }
+  .scene.last { animation-name: scene-last; }
+  @keyframes scene { 0% { opacity: 0 } 7% { opacity: 1 } 93% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes scene-last { 0% { opacity: 0 } 7% { opacity: 1 } 100% { opacity: 1 } }
+
+  /* Pieces inside a scene rise into place at --d, measured from the start of the video. */
+  .up { animation: up 600ms cubic-bezier(.2, .8, .2, 1) var(--d) both; }
+  @keyframes up { from { opacity: 0; transform: translateY(50px) } to { opacity: 1; transform: none } }
+  .pop { animation: pop 500ms cubic-bezier(.2, 1.4, .4, 1) var(--d) both; }
+  @keyframes pop { from { opacity: 0; transform: scale(.6) } to { opacity: 1; transform: none } }
+
+  h2 { font-family: var(--serif); font-weight: 700; font-size: 84px; line-height: 1.12; letter-spacing: -.01em; }
+  .big { font-family: var(--serif); font-weight: 700; font-size: 210px; line-height: 1; letter-spacing: -.02em; }
+  .sub { font-size: 46px; line-height: 1.3; color: var(--muted); }
+  .gold { color: var(--gold); }
+  .red { color: var(--gf); }
+  .gap { height: 44px; flex: none; }
+
+  /* Scene 3: grade distribution */
+  .bars { display: flex; align-items: flex-end; gap: 30px; height: 500px; margin: 50px 0 34px; }
+  .bar { width: 140px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+  .bar b { font-size: 44px; font-weight: 700; margin-bottom: 12px; }
+  .bar i { display: block; width: 100%; border-radius: 14px 14px 0 0; transform-origin: 50% 100%;
+           animation: grow 900ms cubic-bezier(.2, .8, .2, 1) var(--d) both; }
+  @keyframes grow { from { transform: scaleY(0) } to { transform: none } }
+  .bar span { font-family: var(--serif); font-weight: 700; font-size: 76px; line-height: 1.2; }
+
+  /* Scene 4: search box and report card */
+  .search {
+    width: 820px; padding: 30px 40px; border-radius: 22px; background: #fff; color: #1c1f24;
+    font-size: 50px; text-align: left; white-space: nowrap; box-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+  }
+  .search .hint { color: #8a909b; }
+  .search .caret { display: inline-block; width: 4px; height: 56px; background: #1f3a5f; vertical-align: -10px; margin-left: 4px; }
+  .card {
+    width: 820px; margin-top: 44px; padding: 44px 50px 46px; border-radius: 30px; background: #fff;
+    color: #1c1f24; text-align: left; box-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+  }
+  .card .eyebrow { font-size: 24px; font-weight: 600; letter-spacing: .08em; color: #5d6470; }
+  .who { display: flex; align-items: center; gap: 34px; margin: 30px 0 36px; }
+  .who .name { flex: 1; font-family: var(--serif); font-weight: 700; font-size: 58px; line-height: 1.1; }
+  .who .name small { display: block; font-family: var(--sans); font-weight: 400; font-size: 32px; color: #5d6470; margin-top: 10px; }
+  .circle {
+    flex: none; width: 190px; height: 190px; border-radius: 50%; border: 10px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-weight: 700; font-size: 112px; line-height: 1;
+  }
+  .row { display: flex; align-items: center; gap: 24px; font-size: 32px; font-weight: 600; margin-top: 22px; }
+  .row .label { width: 290px; }
+  .row .track { flex: 1; height: 20px; border-radius: 10px; background: #e2dfd6; overflow: hidden; }
+  .row .track i { display: block; height: 100%; border-radius: 10px; background: #1f3a5f; transform-origin: 0 50%;
+                  animation: fill 800ms cubic-bezier(.2, .8, .2, 1) var(--d) both; }
+  @keyframes fill { from { transform: scaleX(0) } to { transform: none } }
+
+  /* Scene 5: call to action */
+  .flag { width: 170px; height: auto; margin-bottom: 40px; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, .4)); }
+  .url {
+    margin-top: 56px; padding: 28px 48px; border-radius: 999px; background: var(--ink); color: var(--accent);
+    font-size: 58px; font-weight: 700; letter-spacing: -.01em; box-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+  }
+  .fine { margin-top: 44px; font-size: 32px; line-height: 1.4; color: var(--muted); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <p class="brand">CONGRESS REPORT CARD</p>
+
+  <section class="scene" style="--at: 0ms; --len: 3400ms">
+    <p class="sub up" style="--d: 150ms">Your member of Congress earns</p>
+    <p class="big gold pop" style="--d: 450ms; font-size: 190px; margin: 26px 0 20px">$174,000</p>
+    <p class="sub up" style="--d: 750ms">a year.</p>
+    <div class="gap"></div>
+    <h2 class="up" style="--d: 1500ms">Did they show up<br>to vote?</h2>
+  </section>
+
+  <section class="scene" style="--at: 3400ms; --len: 4200ms">
+    <p class="big red up" id="missed" style="--d: 3550ms">0</p>
+    <div class="gap" style="height: 30px"></div>
+    <p class="sub up" style="--d: 3800ms">votes missed by today's members<br>of Congress since January 2025.</p>
+    <div class="gap"></div>
+    <h2 class="up" style="--d: 5500ms; font-size: 66px"><span class="red" id="missed50"></span> of them have missed<br>50 or more.</h2>
+  </section>
+
+  <section class="scene" style="--at: 7600ms; --len: 5000ms">
+    <h2 class="up" style="--d: 7750ms">We graded all <span class="gold" id="total"></span>.</h2>
+    <div class="bars" id="bars"></div>
+    <p class="sub up" style="--d: 9700ms; font-size: 42px">Attendance. Bills written. Bills supported.<br>Straight from the public record.</p>
+  </section>
+
+  <section class="scene" style="--at: 12600ms; --len: 4600ms">
+    <div class="search up" style="--d: 12750ms"><span id="typed"></span><span class="caret" id="caret"></span><span class="hint" id="hint"> Search your ZIP code…</span></div>
+    <div class="card up" style="--d: 14400ms">
+      <p class="eyebrow">CONGRESS REPORT CARD · 119TH CONGRESS</p>
+      <div class="who">
+        <p class="name">Your representative<small>What grade did they earn?</small></p>
+        <div class="circle" id="circle">?</div>
+      </div>
+      <div class="row"><span class="label">Vote attendance</span><span class="track"><i style="--d: 14800ms; width: 82%"></i></span></div>
+      <div class="row"><span class="label">Bills written</span><span class="track"><i style="--d: 14950ms; width: 54%"></i></span></div>
+      <div class="row"><span class="label">Bills supported</span><span class="track"><i style="--d: 15100ms; width: 68%"></i></span></div>
+    </div>
+  </section>
+
+  <section class="scene last" style="--at: 17200ms; --len: 4800ms">
+    <svg class="flag pop" style="--d: 17350ms" xmlns="http://www.w3.org/2000/svg" viewBox="0 4 32 24">
+      <clipPath id="c"><rect y="4" width="32" height="24" rx="2.5"/></clipPath>
+      <g clip-path="url(#c)">
+        <rect y="4" width="32" height="24" fill="#fff"/>
+        <rect y="4.000" width="32" height="1.846" fill="#b22234"/><rect y="7.692" width="32" height="1.846" fill="#b22234"/><rect y="11.385" width="32" height="1.846" fill="#b22234"/><rect y="15.077" width="32" height="1.846" fill="#b22234"/><rect y="18.769" width="32" height="1.846" fill="#b22234"/><rect y="22.462" width="32" height="1.846" fill="#b22234"/><rect y="26.154" width="32" height="1.846" fill="#b22234"/>
+        <rect y="4" width="15" height="12.923" fill="#3c3b6e"/>
+        <circle cx="2.5" cy="6.6" r="0.9" fill="#fff"/><circle cx="6.5" cy="6.6" r="0.9" fill="#fff"/><circle cx="10.5" cy="6.6" r="0.9" fill="#fff"/><circle cx="4.5" cy="10.4" r="0.9" fill="#fff"/><circle cx="8.5" cy="10.4" r="0.9" fill="#fff"/><circle cx="12.5" cy="10.4" r="0.9" fill="#fff"/><circle cx="2.5" cy="14.2" r="0.9" fill="#fff"/><circle cx="6.5" cy="14.2" r="0.9" fill="#fff"/><circle cx="10.5" cy="14.2" r="0.9" fill="#fff"/>
+      </g>
+    </svg>
+    <p class="sub up" style="--d: 17500ms">Election Day is <span class="gold">November 3</span>.</p>
+    <div class="gap" style="height: 22px"></div>
+    <h2 class="up" style="--d: 17800ms">See their grade<br>before you vote.</h2>
+    <p class="url pop" style="--d: 18500ms">congressreportcard.org</p>
+    <p class="fine up" style="--d: 19100ms">Free. Independent. Not affiliated with<br>any party or campaign.</p>
+  </section>
+</div>
+
+<script src="stats.js"></script>
+<script>
+(function () {
+  const DURATION = 22000;
+  const S = window.REEL_STATS;
+  const $ = (id) => document.getElementById(id);
+  const COLORS = { A: "var(--ga)", B: "var(--gb)", C: "var(--gc)", D: "var(--gd)", F: "var(--gf)" };
+  const DARK = { A: "#1d7a4b", B: "#4f8a2c", C: "#b58a12", D: "#c4631c", F: "#b3372f" };
+  const LETTERS = Object.keys(COLORS);
+  const ZIP = "90210";
+
+  $("total").textContent = S.members;
+  $("missed50").textContent = S.missed50;
+  const tallest = Math.max(...LETTERS.map((l) => S.grades[l]));
+  $("bars").innerHTML = LETTERS.map((l, i) => {
+    const d = 8300 + i * 160;
+    return `<div class="bar" style="color: ${COLORS[l]}">
+      <b class="up" style="--d: ${d + 500}ms">${S.grades[l]}</b>
+      <i style="--d: ${d}ms; height: ${Math.max(10, Math.round(330 * S.grades[l] / tallest))}px; background: ${COLORS[l]}"></i>
+      <span>${l}</span></div>`;
+  }).join("");
+
+  const animations = document.getAnimations();
+  animations.forEach((a) => a.pause());
+
+  // Draws the video as it looks `ms` after the start. make_reel.py calls this once per frame.
+  window.seek = function (ms) {
+    animations.forEach((a) => { a.currentTime = ms; });
+
+    const p = Math.min(1, Math.max(0, (ms - 3600) / 1700));
+    $("missed").textContent = Math.round(S.missed * (1 - Math.pow(1 - p, 3))).toLocaleString("en-US");
+
+    const typed = Math.min(ZIP.length, Math.max(0, Math.floor((ms - 13300) / 200)));
+    $("typed").textContent = ZIP.slice(0, typed);
+    $("hint").hidden = typed > 0;
+    $("caret").style.opacity = typed < ZIP.length || Math.floor(ms / 400) % 2 ? 1 : 0;
+
+    // The grade spins through the letters, then stops on a question mark.
+    const spinning = ms >= 14900 && ms < 16000;
+    const letter = LETTERS[Math.floor((ms - 14900) / 140) % LETTERS.length];
+    $("circle").textContent = spinning ? letter : "?";
+    $("circle").style.color = spinning ? DARK[letter] : "#1f3a5f";
+  };
+  window.DURATION = DURATION;
+
+  // Opened in a browser: scale to fit the window and play on a loop.
+  if (!location.hash.includes("render")) {
+    const fit = () => {
+      const k = Math.min(innerWidth / 1080, innerHeight / 1920);
+      $("stage").style.transform = `translate(${(innerWidth - 1080 * k) / 2}px, 0) scale(${k})`;
+    };
+    fit(); addEventListener("resize", fit);
+    const start = performance.now();
+    (function tick(now) { seek((now - start) % (DURATION + 1500)); requestAnimationFrame(tick); })(start);
+  } else {
+    seek(0);
+  }
+})();
+</script>
+</body>
+</html>

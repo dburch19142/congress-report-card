@@ -10,3 +10,6 @@ site/members/
 site/badges/
 site/sitemap.xml
 site/ads.txt
+# Built by reel/make_reel.py
+reel/music.wav
+reel/*.mp4
