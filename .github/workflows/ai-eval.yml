@@ -1,0 +1,80 @@
+# Tests ask.py, the tool that answers questions about members from the site's data.
+#
+# harness  runs on every change to the tool or its tests. No API calls and no cost: unit
+#          tests, then the runner on perfect answers (must score 100%) and empty answers
+#          (must score 0%).
+# eval     runs only when started by hand from the Actions tab. It asks Claude all the
+#          questions in evals/cases.py, grades the answers and fails if too few are correct.
+#          It needs the ANTHROPIC_API_KEY repository secret and costs money on every run.
+name: AI evaluation
+
+on:
+  push:
+    branches: [main]
+    paths: ["ask.py", "build_pages.py", "evals/**", ".github/workflows/ai-eval.yml"]
+  pull_request:
+    paths: ["ask.py", "build_pages.py", "evals/**", ".github/workflows/ai-eval.yml"]
+  workflow_dispatch:
+    inputs:
+      model:
+        description: Model that answers the questions
+        default: claude-opus-5-5
+      min_pass:
+        description: Fail the run below this share of correct answers (0 to 1)
+        default: "0.90"
+
+permissions:
+  contents: read
+
+jobs:
+  harness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r evals/requirements.txt
+      - name: Unit tests
+        run: python -m unittest discover evals -v
+      - name: Case set is well formed
+        run: python evals/cases.py
+      - name: Perfect answers score 100%
+        run: python evals/run_eval.py --stub oracle
+      - name: Empty answers score 0%
+        run: python evals/run_eval.py --stub null
+
+  eval:
+    if: github.event_name == 'workflow_dispatch'
+    needs: harness
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - run: pip install -r evals/requirements.txt
+      - name: Check the judge on answers with known verdicts
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python evals/run_eval.py --check-judge
+      - name: Run the evaluation
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MODEL: ${{ inputs.model }}
+          MIN_PASS: ${{ inputs.min_pass }}
+        run: python evals/run_eval.py --fresh --model "$MODEL" --min-pass "$MIN_PASS"
+      - name: Build the report
+        if: ${{ !cancelled() }}
+        run: node evals/report/build-report-lite.mjs evals/runs/ask
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: ai-eval-report
+          path: evals/runs/ask/
+          retention-days: 14

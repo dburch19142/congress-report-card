@@ -16,3 +16,8 @@ site/ads.txt
 # Built by reel/make_reel.py
 reel/music.wav
 reel/*.mp4
+# Evaluation output that is rebuilt on every run (evals/runs/ask/*/results.jsonl is kept)
+evals/runs/_selftest-*/
+evals/runs/**/traces/
+evals/runs/**/report.html
+evals/runs/**/trajectory/

@@ -122,6 +122,25 @@ laid out around TikTok's buttons that shows the `congressreportcard.org/tiktok` 
 videos and the music file are not committed. Run it again after a data update to refresh the
 numbers.
 
+## Ask a question about a member
+
+`ask.py` answers plain-English questions from the same data, using Claude:
+
+```powershell
+pip install -r evals/requirements.txt
+$env:ANTHROPIC_API_KEY = "your_key"
+python ask.py "Which Georgia representative has missed the most votes?"
+```
+
+Claude never sees the data file. It gets three lookup tools and answers only from what they
+return. It is a command-line tool and is not part of the public site, which has nowhere safe
+to keep an API key.
+
+`evals/` tests it with 62 questions: facts, rankings, questions the data cannot answer, and
+attempts to get an opinion or override its rules. See [evals/README.md](evals/README.md).
+The **AI evaluation** workflow runs the free checks on every change and the full evaluation
+when started by hand.
+
 ## Data sources
 
 - Roster: [unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators)

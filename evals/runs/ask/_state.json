@@ -1,0 +1,31 @@
+{
+  "metrics": [
+    {
+      "id": "correct",
+      "label": "Correct",
+      "kind": "binary"
+    },
+    {
+      "id": "grounded",
+      "label": "Grounded",
+      "kind": "binary"
+    }
+  ],
+  "perf_fields": [
+    {
+      "id": "latency_s",
+      "label": "Latency",
+      "unit": "s"
+    },
+    {
+      "id": "tool_calls",
+      "label": "Tool calls"
+    }
+  ],
+  "harness_paths": [
+    "evals/cases.py",
+    "evals/graders.py",
+    "evals/requirements.txt"
+  ],
+  "harness_sha": "196592d0f9fe12642fba1dbe505077f36c42ea1ad9aa238b6ca9c3ebc07c1d50"
+}
