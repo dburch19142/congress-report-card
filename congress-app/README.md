@@ -5,7 +5,7 @@ a letter grade for every current U.S. Representative and Senator, based on
 vote attendance and legislative record. It has no data of its own. Every
 screen reads the files the site publishes for its own pages
 (`data/members.js`, `data/zips.js` and `digest/feed.xml`, built by
-`../congress-report-card`), so the app shows the same nightly data as the
+the scripts in the repo root), so the app shows the same nightly data as the
 site.
 
 ## Screens
@@ -33,7 +33,7 @@ Pull down on the members list or the digest to reload it from the site.
   interface the screens use (tests swap in canned data).
 - `lib/models.dart`: the data classes for `members.js`.
 - `lib/grading.dart`: the grading rules. They repeat `GRADING` in
-  `../congress-report-card/site/app.js` and `build_pages.py`; change all
+  `../site/app.js` and `../build_pages.py`; change all
   three together.
 - `lib/store.dart`: the loaded data, the weights and the grades, shared by
   the tabs, plus the search, ZIP code lookup, filters and sort orders.
@@ -53,7 +53,7 @@ flutter run
 
 The app reads `https://congressreportcard.org` by default. To run it
 against a local copy of the site (`python -m http.server 8000 --directory
-site` in `../congress-report-card`):
+site` in the repo root):
 
 ```bash
 flutter run --dart-define=SITE_BASE=http://localhost:8000
