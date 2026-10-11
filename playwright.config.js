@@ -15,8 +15,11 @@ module.exports = defineConfig({
     trace: 'on-first-retry',
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] }, testIgnore: /every-member/ },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] }, testIgnore: /every-member/ },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] }, testIgnore: /every-member/ },
+    // One test per member of Congress (~540). Chromium only, to keep the run time down.
+    // Run just these with: npx playwright test --project=every-member
+    { name: 'every-member', use: { ...devices['Desktop Chrome'] }, testMatch: /every-member/ },
   ],
 });
