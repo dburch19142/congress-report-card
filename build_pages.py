@@ -18,6 +18,7 @@ data in the browser. tests/congress-report-card.spec.js checks that the two agre
 """
 import copy
 import json
+import math
 import re
 import shutil
 import statistics
@@ -286,11 +287,11 @@ def comparison(m, ctx):
 
     ranked = ctx["chamber"][chamber]
     rank = ranked.index(m) + 1
-    top = round(rank / len(ranked) * 100)
+    top = math.ceil(rank / len(ranked) * 100)  # rounded up, so the share is never overstated
     party = ctx["party"][(chamber, m["party"])]
     party_word = {"Democrat": "Democrats", "Republican": "Republicans"}.get(m["party"], "independents")
     text = (f"{possessive(last)} overall score of {m['score']:.0f} ranks {ordinal(rank)} of {len(ranked)} {peers}"
-            f"{f', in the top {max(top, 1)}%' if top <= 50 else ''}.")
+            f"{f', in the top {top}%' if top <= 50 else ''}.")
     if len(party) > 1:
         text += f" Among the {len(party)} {party_word} in the {chamber}, {last} ranks {ordinal(party.index(m) + 1)}."
     text += f" The median score in the {chamber} is {ctx['median'][chamber]['score']:.0f}."
@@ -307,11 +308,11 @@ def comparison(m, ctx):
         parts = [plural(senators, "senator")] if senators else []
         parts += [plural(reps, "representative")] if reps else []
         text = (f"{state_name(m['state'])} has {len(delegation)} members of Congress ({' and '.join(parts)}). "
-                f"Their average score is {avg:.0f}, {a_grade(letter_of(avg))}. "
-                f"{last} has the {ordinal(delegation.index(m) + 1)}-highest score in the delegation")
+                f"Their average score is {avg:.0f}, {a_grade(letter_of(avg))}. ")
         best = delegation[0]
-        text += ("." if best is m else
-                 f"; the highest is {e(best['name'])}, with {a_grade(best['grade'])}.")
+        text += (f"{last} has the highest score in the delegation." if best is m else
+                 f"{last} has the {ordinal(delegation.index(m) + 1)}-highest score in the delegation; "
+                 f"the highest is {e(best['name'])}, with {a_grade(best['grade'])}.")
         text += f' <a href="../states/{m["state"].lower()}.html">See the whole delegation</a>.'
         out.append(text)
 

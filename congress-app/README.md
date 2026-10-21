@@ -135,6 +135,14 @@ Keep `dist.key`, `dist.p12` and the `.p8` somewhere safe and out of this
 repository. The certificate and profile expire after a year; make new ones
 and update the secrets when they do.
 
+## App Store listing
+
+`app-store/listing.md` has the text for every App Store Connect field (name, subtitle,
+description, keywords, privacy and age-rating answers, notes for App Review), and
+`app-store/screenshots/` has the screenshots for the 6.9" iPhone and 13" iPad slots.
+`python app-store/check_listing.py` checks the text against Apple's length limits, and
+`node app-store/screenshots.mjs` takes the screenshots again from the web build.
+
 The name under the icon on the home screen is "Report Card"
 (`CFBundleDisplayName` in `ios/Runner/Info.plist`); the full name would be
 cut off there. The icon is the site's flag mark on the site's navy

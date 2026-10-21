@@ -120,10 +120,11 @@ class Comparisons {
 
     final ranked = byChamber[m.chamber]!;
     final rank = ranked.indexOf(g) + 1;
-    final top = (rank / ranked.length * 100).round();
+    // Rounded up, so the share is never overstated.
+    final top = (rank / ranked.length * 100).ceil();
     var text = "${possessive(last)} overall score of ${g.score!.round()} ranks "
         '${ordinal(rank)} of ${ranked.length} $peers'
-        '${top <= 50 ? ', in the top ${top < 1 ? 1 : top}%' : ''}.';
+        '${top <= 50 ? ', in the top $top%' : ''}.';
     final party = byParty['${m.chamber}|${m.party}']!;
     if (party.length > 1) {
       final word = switch (m.party) {
@@ -155,9 +156,8 @@ class Comparisons {
       final best = delegation.first;
       out.add('${stateName(m.state)} has ${delegation.length} members of '
           'Congress (${seats.join(' and ')}). Their average score is '
-          '${avg.round()}, ${aGrade(letterOf(avg))}. $last has the '
-          '${ordinal(delegation.indexOf(g) + 1)}-highest score in the '
-          'delegation${identical(best, g) ? '' : '; the highest is ${best.member.name}, with ${aGrade(best.grade)}'}.');
+          '${avg.round()}, ${aGrade(letterOf(avg))}. '
+          '${identical(best, g) ? '$last has the highest score in the delegation.' : '$last has the ${ordinal(delegation.indexOf(g) + 1)}-highest score in the delegation; the highest is ${best.member.name}, with ${aGrade(best.grade)}.'}');
     }
 
     final med = medians[m.chamber]!;
