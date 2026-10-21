@@ -15,7 +15,16 @@
 </head>
 <body>
   <header class="masthead slim">
-    <div class="wrap"><a class="home" href="./">Congress Report Card</a></div>
+    <div class="wrap bar">
+      <a class="home" href="./">Congress Report Card</a>
+      <nav class="topnav" aria-label="Main">
+        <a href="./">Members</a>
+        <a href="states/">States</a>
+        <a href="articles/">Articles</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
   </header>
 
   <main class="wrap page prose">
@@ -34,9 +43,24 @@
     </table>
     <p>On the home page you can change these weights with <strong>Adjust grading</strong>. Member pages, badges and share images always use the standard weights above.</p>
 
+    <h2 id="why">Why these three measures</h2>
+    <p>The grades are built from things every member of Congress does, that are recorded the same way for everyone, and that say nothing about political views:</p>
+    <ul>
+      <li><strong>Voting</strong> is the most basic duty of a legislator, and the one voters most often ask about. Every roll call records each member by name, so attendance can be measured exactly.</li>
+      <li><strong>Writing bills</strong> is how members turn ideas into law. Counting not just how many bills a member writes but how far they get rewards legislation that moves, not just legislation that is filed.</li>
+      <li><strong>Supporting bills</strong> as a cosponsor is how members put their names behind colleagues' work and build the coalitions that bills need to pass.</li>
+    </ul>
+    <p>Other measures were considered and left out. Counting how often a member votes with their party, or rating votes as right or wrong, would turn the grades into a statement about ideology. Counting speeches, press releases or social media posts would reward visibility rather than legislative work. Committee work matters a great deal but isn't recorded consistently enough to compare across members.</p>
+
+    <h2 id="weights-why">Why the weights are 40, 35 and 25</h2>
+    <p>Attendance gets the largest weight because it is the one part of the job every member controls and the one that is measured with no estimation at all. Bills written comes next because it reflects both effort and results. Bills supported gets the smallest weight because cosponsoring takes less work than writing a bill or voting, though it is still a public, recorded commitment.</p>
+    <p>Reasonable people can weigh these differently, which is why the home page lets you set your own weights. Changing them updates every grade instantly, so you can see how much the ranking depends on the choice.</p>
+
     <h2 id="attendance">Vote attendance</h2>
     <p>This is the share of roll-call votes the member cast while in office. Voting "present" counts as attending. Votes held before a member was sworn in or after they left are not counted.</p>
+    <p><strong>Which votes count:</strong> every recorded roll-call vote in the member's chamber, as published by Voteview. That includes votes on passing bills, amendments, procedural motions, and in the Senate, nominations and treaties. Votes decided by voice or by unanimous consent leave no record of how individual members voted, so they can't be counted. Quorum calls are not votes and are not included. All roll calls count equally: a procedural vote counts the same as final passage, because skipping either one is a missed vote.</p>
     <p>100% attendance scores 100 points and 85% or lower scores 0, on a straight line in between. For example, 97% attendance scores 80 points and 92.5% scores 50.</p>
+    <p><strong>Why the scale starts at 85%:</strong> almost every member votes on more than 90% of roll calls, and the typical member votes on about 98%. A scale that started at 0% would give nearly everyone an A for attendance and hide the real differences between members. Starting at 85% spreads members across the range where they actually differ, so missing one vote in ten is clearly worse than missing one in fifty.</p>
     <ul>
       <li>By custom the Speaker of the House votes only occasionally, so votes skipped as Speaker aren't counted against them.</li>
       <li>Delegates from DC and the territories may vote only in the Committee of the Whole. They are counted only on the votes they are allowed to cast.</li>
@@ -54,6 +78,7 @@
       </tbody>
     </table>
     <p>The member's point total is then ranked against the other members of their own chamber. The top member scores 100, the chamber average scores 75 (a C) and the lowest scores 50. Senators are compared only with senators and House members only with House members.</p>
+    <p><strong>Why rank within the chamber:</strong> raw bill counts differ a lot between the chambers. The typical senator sponsors more than twice as many bills as the typical representative, so comparing raw counts would favor senators simply for being senators. Ranking within each chamber puts both on the same scale. The scale runs from 50 rather than 0 so that a member with few bills still loses ground without being wiped out by one score, and so that a single member with an unusually high count doesn't flatten everyone else.</p>
     <p>Simple and concurrent resolutions, such as commemorations, can't become law and don't count.</p>
 
     <h2 id="cosponsored">Bills supported</h2>
@@ -72,6 +97,19 @@
       </tbody>
     </table>
     <p>A member who was in office for fewer than half of their chamber's roll calls gets a <em>partial term</em> label. Their bill counts cover less time than other members', so read those grades with care.</p>
+
+    <h2 id="example">A worked example</h2>
+    <p>Take a House member who voted on 654 of 674 roll calls, sponsored 10 bills (6 introduced only, 2 with committee action, 1 that passed the House and 1 that became law) and cosponsored 124 bills.</p>
+    <ul>
+      <li>Attendance is 97.0%, which scores 80.</li>
+      <li>The 10 bills earn 6 × 1 + 2 × 3 + 1 × 6 + 1 × 10 = 28 points, which ranks at about the 44th percentile of the House and scores 72.</li>
+      <li>124 cosponsored bills ranks at about the 15th percentile of the House and scores 58.</li>
+      <li>The overall score is 80 × 0.40 + 72 × 0.35 + 58 × 0.25 = 72, a C−.</li>
+    </ul>
+    <p>Every member page shows the same breakdown, so any grade can be checked this way. <a href="articles/how-to-read-a-report-card.html">How to read a congressional report card</a> walks through a real member's page.</p>
+
+    <h2 id="no-adjustments">Why there are no special adjustments</h2>
+    <p>The only exceptions to the rules above are the Speaker's votes and the delegates' limited voting rights, both of which are set by the House itself. Otherwise every member is graded by the same formula. Grades are not adjusted for party, seniority, leadership roles, committee chairs, illness or any other circumstance. Each of those adjustments would require a judgment call that couldn't be applied evenly, and a grade that depends on judgment calls is harder to trust. The trade-off is that some members' grades understate their influence; party leaders are the clearest example, as explained in <a href="articles/why-party-leaders-score-low.html">Why party leaders score low on bills</a>.</p>
 
     <h2 id="limits">What the grades don't measure</h2>
     <ul>
@@ -92,7 +130,7 @@
       <li>ZIP code districts: <a href="https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html">Census Bureau</a></li>
       <li>Photos: <a href="https://github.com/unitedstates/images">unitedstates/images</a></li>
     </ul>
-    <p>The data is rebuilt every night. The code that builds the data and calculates the grades is public on <a href="https://github.com/dburch19142/congress-report-card">GitHub</a>. If you find a mistake, please <a href="contact.html">get in touch</a>.</p>
+    <p>The data is rebuilt every night. Member pages for anyone who doesn't have enough data for a grade yet are kept out of search engines until they do. The code that builds the data and calculates the grades is public on <a href="https://github.com/dburch19142/congress-report-card">GitHub</a>. If you find a mistake, please <a href="contact.html">get in touch</a>.</p>
     <div class="ad-slot" data-ad="page"></div>
   </main>
 
@@ -100,9 +138,13 @@
     <div class="wrap">
       <nav aria-label="Site">
         <a href="./">All members</a>
+        <a href="states/">States</a>
+        <a href="articles/">Articles</a>
         <a href="digest/">Weekly digest</a>
         <a href="methodology.html">Methodology</a>
+        <a href="about.html">About</a>
         <a href="privacy.html">Privacy policy</a>
+        <a href="terms.html">Terms</a>
         <a href="contact.html">Contact</a>
       </nav>
       <p>Congress Report Card is an independent project. It is not affiliated with Congress, any party or any campaign.</p>

@@ -549,7 +549,8 @@ def test_13_member_page_share_image_and_badge(page: Page):
 
 def test_14_methodology_privacy_and_contact_pages(page: Page):
     footer = page.locator(".site-footer nav a")
-    expect(footer).to_have_text(["All members", "Weekly digest", "Methodology", "Privacy policy", "Contact"])
+    expect(footer).to_have_text(["All members", "States", "Articles", "Weekly digest", "Methodology", "About",
+                                 "Privacy policy", "Terms", "Contact"])
 
     footer.filter(has_text="Methodology").click()
     expect(page.locator("h1")).to_have_text("How grades are calculated")
@@ -646,6 +647,41 @@ def test_16_ad_slots(page: Page):
             expect(slot.locator(".ad-label")).to_have_text("Advertisement")
         else:
             expect(slot).to_be_empty()
+
+
+def test_17_main_menu_state_pages_articles_about_and_terms(page: Page):
+    menu = page.locator(".topnav a")
+    expect(menu).to_have_text(["Members", "States", "Articles", "Methodology", "About"])
+
+    # States: every state ranked, each with a page listing its members
+    menu.filter(has_text="States").click()
+    expect(page.locator("h1")).to_have_text("Report cards by state")
+    expect(page.locator("main tbody tr")).to_have_count(50)
+    page.locator("main tbody a", has_text="Ohio").click()
+    expect(page.locator("h1")).to_have_text("Ohio")
+    expect(page.locator("main tbody tr").first.locator("a[href^='../members/']")).to_be_attached()
+
+    # Member pages compare the member with their chamber and state
+    page.locator("main tbody a").first.click()
+    expect(page.locator(".compare h2")).to_have_text(re.compile(r"^How .+ compares$"))
+    expect(page.locator(".compare")).to_contain_text("See the whole delegation")
+
+    # Articles: a list of articles, each a substantial page
+    page.locator(".topnav a", has_text="Articles").click()
+    expect(page.locator("h1")).to_have_text("Articles")
+    articles = page.locator(".article-list li > a")
+    assert articles.count() >= 15
+    articles.first.click()
+    assert len(page.locator("article").inner_text().split()) > 800
+
+    page.locator(".topnav a", has_text="About").click()
+    expect(page.locator("h1")).to_have_text("About Congress Report Card")
+    page.locator(".site-footer nav a", has_text="Terms").click()
+    expect(page.locator("h1")).to_have_text("Terms of use")
+
+    sitemap = page.request.get("/sitemap.xml").text()
+    for path in ["/states/oh.html</loc>", "/articles/</loc>", "/terms.html</loc>"]:
+        assert path in sitemap, path
 
 
 if __name__ == "__main__":

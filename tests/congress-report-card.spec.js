@@ -486,7 +486,8 @@ test('13 Member page, share image and badge', async ({ page, request }) => {
 
 test('14 Methodology, privacy and contact pages', async ({ page, request }) => {
   const footer = page.locator('.site-footer nav a');
-  await expect(footer).toHaveText(['All members', 'Weekly digest', 'Methodology', 'Privacy policy', 'Contact']);
+  await expect(footer).toHaveText(['All members', 'States', 'Articles', 'Weekly digest', 'Methodology', 'About',
+    'Privacy policy', 'Terms', 'Contact']);
 
   await footer.filter({ hasText: 'Methodology' }).click();
   await expect(page.locator('h1')).toHaveText('How grades are calculated');
@@ -585,6 +586,43 @@ test('16 Ad slots', async ({ page }) => {
       await expect(slot).toBeEmpty();
     }
   }
+});
+
+test('17 Main menu, state pages, articles, about and terms', async ({ page, request }) => {
+  const menu = page.locator('.topnav a');
+  await expect(menu).toHaveText(['Members', 'States', 'Articles', 'Methodology', 'About']);
+
+  // States: every state ranked, each with a page listing its members
+  await menu.filter({ hasText: 'States' }).click();
+  await expect(page.locator('h1')).toHaveText('Report cards by state');
+  await expect(page.locator('main tbody tr')).toHaveCount(50);
+  await page.locator('main tbody a', { hasText: 'Ohio' }).click();
+  await expect(page.locator('h1')).toHaveText('Ohio');
+  await expect(page.locator('main tbody tr').first().locator("a[href^='../members/']")).toBeAttached();
+
+  // Member pages compare the member with their chamber and state
+  await page.locator('main tbody a').first().click();
+  await expect(page.locator('.compare h2')).toHaveText(/^How .+ compares$/);
+  await expect(page.locator('.compare')).toContainText('See the whole delegation');
+
+  // Articles: a list of articles, each a substantial page
+  await page.locator('.topnav a', { hasText: 'Articles' }).click();
+  await expect(page.locator('h1')).toHaveText('Articles');
+  const articles = page.locator('.article-list li > a');
+  expect(await articles.count()).toBeGreaterThanOrEqual(15);
+  await articles.first().click();
+  const words = (await page.locator('article').innerText()).split(/\s+/).length;
+  expect(words).toBeGreaterThan(800);
+
+  await page.locator('.topnav a', { hasText: 'About' }).click();
+  await expect(page.locator('h1')).toHaveText('About Congress Report Card');
+  await page.locator('.site-footer nav a', { hasText: 'Terms' }).click();
+  await expect(page.locator('h1')).toHaveText('Terms of use');
+
+  const sitemap = await (await request.get('/sitemap.xml')).text();
+  expect(sitemap).toContain('/states/oh.html</loc>');
+  expect(sitemap).toContain('/articles/</loc>');
+  expect(sitemap).toContain('/terms.html</loc>');
 });
 
 test.describe('phone', () => {

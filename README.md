@@ -45,8 +45,9 @@ Rebuild it with `python build_zips.py` when a new Congress starts.
 python -m http.server 8000 --directory site
 ```
 
-The member pages (`site/members/`), grade badges (`site/badges/`) and `site/sitemap.xml` are
-generated from the data and are not committed. Build them before previewing locally:
+The member pages (`site/members/`), grade badges (`site/badges/`), state pages (`site/states/`),
+articles (`site/articles/`) and `site/sitemap.xml` are generated from the data and are not
+committed. Build them before previewing locally:
 
 ```powershell
 python build_pages.py
@@ -64,6 +65,15 @@ The data refreshes automatically: `.github/workflows/update-data.yml` runs every
 it and redeploys the site. It can also be run by hand from the repo's **Actions** tab
 (**Nightly data update → Run workflow**). If more than 5% of members fail to load, the build stops
 and the site keeps the previous day's data.
+
+## Articles
+
+Each file in `articles/` is one article: a JSON header in an HTML comment (`title`,
+`description`, `date` and `order`, which sets the order among articles with the same date),
+then the article body as HTML. `build_pages.py` wraps it in the site's header and footer, lists it
+on `articles/`, and adds it to the sitemap. Write `[[Member Name]]` with the name exactly as it is
+in `members.js` to link to that member's page; if the member has left Congress it becomes plain
+text. Articles quote figures as of their date and are not updated with the nightly data.
 
 ## Weekly digest and email sign-up
 
