@@ -1,0 +1,184 @@
+# Tests the iPhone app in congress-app/ and builds it on a Mac.
+#
+# test        every change to the app: the Flutter tests, on Linux.
+# build       every change to the app: an unsigned release build for iPhone, which proves the
+#             app compiles with Xcode. The unsigned Runner.app is kept as an artifact for a week.
+# testflight  only when started by hand from the Actions tab with "Upload to TestFlight" ticked.
+#             Signs the app and uploads it to App Store Connect. Needs the Apple secrets listed in
+#             congress-app/README.md.
+name: iOS app
+
+on:
+  push:
+    branches: [main, congress-mobile-app]
+    paths: ["congress-app/**", ".github/workflows/ios.yml"]
+  pull_request:
+    paths: ["congress-app/**", ".github/workflows/ios.yml"]
+  workflow_dispatch:
+    inputs:
+      testflight:
+        description: Upload to TestFlight
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: congress-app
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter --version
+      - run: flutter pub get
+      - run: flutter test
+
+  build:
+    needs: test
+    if: ${{ !inputs.testflight }}
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: xcodebuild -version
+      - run: flutter pub get
+      - name: Build for iPhone without signing
+        run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }}
+      - name: Zip the app
+        run: ditto -c -k --keepParent build/ios/iphoneos/Runner.app Runner-unsigned.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-unsigned-${{ github.run_number }}
+          path: congress-app/Runner-unsigned.zip
+          retention-days: 7
+
+  testflight:
+    needs: test
+    if: ${{ inputs.testflight }}
+    runs-on: macos-latest
+    timeout-minutes: 45
+    env:
+      TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      CERT_P12: ${{ secrets.IOS_DISTRIBUTION_CERT_P12_BASE64 }}
+      CERT_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}
+      PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+      ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      ASC_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+    steps:
+      - name: Check the Apple secrets are set
+        run: |
+          missing=""
+          for name in TEAM_ID CERT_P12 CERT_PASSWORD PROFILE ASC_KEY_ID ASC_ISSUER_ID ASC_PRIVATE_KEY; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Missing secrets:$missing. See 'Build in GitHub Actions' in congress-app/README.md."
+            exit 1
+          fi
+        working-directory: .
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: xcodebuild -version
+      - run: flutter pub get
+
+      - name: Install the distribution certificate and provisioning profile
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(uuidgen)"
+          echo "$CERT_P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          echo "$PROFILE" | base64 --decode > "$RUNNER_TEMP/profile.mobileprovision"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/cert.p12" -P "$CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN" > /dev/null
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+
+          security cms -D -i "$RUNNER_TEMP/profile.mobileprovision" > "$RUNNER_TEMP/profile.plist"
+          UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$RUNNER_TEMP/profile.plist")
+          NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' "$RUNNER_TEMP/profile.plist")
+          for dir in "$HOME/Library/MobileDevice/Provisioning Profiles" \
+                     "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"; do
+            mkdir -p "$dir"
+            cp "$RUNNER_TEMP/profile.mobileprovision" "$dir/$UUID.mobileprovision"
+          done
+          APP_ID=$(/usr/libexec/PlistBuddy -c 'Print :Entitlements:application-identifier' "$RUNNER_TEMP/profile.plist")
+          echo "PROFILE_NAME=$NAME" >> "$GITHUB_ENV"
+          echo "BUNDLE_ID=${APP_ID#*.}" >> "$GITHUB_ENV"
+
+      # Manual signing for the Runner target only. Setting it for the whole build would also
+      # apply it to the CocoaPods targets, which can't take a provisioning profile.
+      - name: Switch the app target to manual signing
+        run: |
+          ruby -rxcodeproj -e '
+            project = Xcodeproj::Project.open("ios/Runner.xcodeproj")
+            target = project.targets.find { |t| t.name == "Runner" }
+            target.build_configurations.each do |config|
+              s = config.build_settings
+              s["CODE_SIGN_STYLE"] = "Manual"
+              s["DEVELOPMENT_TEAM"] = ENV["TEAM_ID"]
+              s["PROVISIONING_PROFILE_SPECIFIER"] = ENV["PROFILE_NAME"]
+              s["CODE_SIGN_IDENTITY"] = "Apple Distribution"
+              s["CODE_SIGN_IDENTITY[sdk=iphoneos*]"] = "Apple Distribution"
+            end
+            project.save'
+
+      - name: Build the signed IPA
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>teamID</key><string>$TEAM_ID</string>
+            <key>signingStyle</key><string>manual</string>
+            <key>provisioningProfiles</key>
+            <dict><key>$BUNDLE_ID</key><string>$PROFILE_NAME</string></dict>
+            <key>uploadSymbols</key><true/>
+          </dict>
+          </plist>
+          EOF
+          flutter build ipa --release --build-number ${{ github.run_number }} \
+            --export-options-plist="$RUNNER_TEMP/ExportOptions.plist"
+
+      - name: Upload to TestFlight
+        run: |
+          mkdir -p "$HOME/.appstoreconnect/private_keys"
+          echo "$ASC_PRIVATE_KEY" > "$HOME/.appstoreconnect/private_keys/AuthKey_$ASC_KEY_ID.p8"
+          xcrun altool --upload-app --type ios --file build/ios/ipa/*.ipa \
+            --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: ios-ipa-${{ github.run_number }}
+          path: congress-app/build/ios/ipa/*.ipa
+          retention-days: 7
+
+      - name: Remove the signing keychain
+        if: ${{ always() }}
+        run: security delete-keychain "$RUNNER_TEMP/signing.keychain-db" || true
+        working-directory: .
