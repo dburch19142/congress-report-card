@@ -373,12 +373,12 @@ void main() {
       expect(
           alpha[0],
           "Alpha's overall score of 100 ranks 1st of 3 House members, in the "
-          'top 33%. The median score in the House is 85.');
+          'top 34%. The median score in the House is 85.');
       expect(
           alpha[1],
           'Georgia has 4 members of Congress (2 senators and 2 '
           'representatives). Their average score is 67, a D+. Alpha has the '
-          '1st-highest score in the delegation.');
+          'highest score in the delegation.');
       // The typical House member leaves out Charlie, who has a partial term.
       expect(alpha[2],
           contains('5.0 points above the typical House member (95.0%)'));
