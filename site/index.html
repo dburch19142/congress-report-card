@@ -16,6 +16,13 @@
 <body>
   <header class="masthead">
     <div class="wrap">
+      <nav class="topnav home-nav" aria-label="Main">
+        <a href="./" aria-current="page">Members</a>
+        <a href="states/">States</a>
+        <a href="articles/">Articles</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="about.html">About</a>
+      </nav>
       <p class="eyebrow" id="congress-label">119th Congress</p>
       <h1>Congress Report Card</h1>
       <p class="lede">How often does your representative show up to vote, and how much legislation do they write and support? Representatives and senators each earn a base salary of $174,000 a year. Each grade comes only from the public record.</p>
@@ -24,6 +31,7 @@
 
   <main class="wrap">
     <div id="notice" class="notice" hidden></div>
+    <noscript><p class="notice">The searchable list of members needs JavaScript. You can still <a href="states/">browse every member by state</a>.</p></noscript>
 
     <section class="controls" aria-label="Filters">
       <input id="q" type="search" placeholder="Search by name, state or ZIP code…" aria-label="Search by name, state or ZIP code">
@@ -86,15 +94,91 @@
       </div>
       <p class="sources">Data: rosters from <a href="https://github.com/unitedstates/congress-legislators">congress-legislators</a>, roll-call votes from <a href="https://voteview.com">Voteview</a>, legislation from <a href="https://api.congress.gov">Congress.gov</a>, ZIP code districts from the <a href="https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html">Census Bureau</a>. Bill progress is inferred from each bill's latest action. <span id="generated"></span> <a href="methodology.html">Read the full methodology</a>.</p>
     </section>
+
+    <section class="explore" aria-labelledby="about-heading">
+      <h2 id="about-heading">What this site does</h2>
+      <p>Congress Report Card grades every current member of Congress, including the six non-voting delegates, on the parts of the job the public record can measure: whether they show up to vote, whether they write legislation that moves, and how many of their colleagues' bills they support. Search for your own members above by name, state or ZIP code, or select any card to see the numbers behind the grade.</p>
+      <p>The grades are nonpartisan. No vote is scored as right or wrong, no issue position counts, and every member is graded by the same formula. The data comes from Voteview and Congress.gov and is rebuilt every night. <a href="about.html">More about the project</a>.</p>
+
+      <h2>Browse by state</h2>
+      <p>See your state's senators and representatives side by side, with how the delegation ranks against other states. <a href="states/">All states, ranked</a>.</p>
+      <nav class="state-links" aria-label="States">
+          <a href="states/al.html">Alabama</a>
+          <a href="states/ak.html">Alaska</a>
+          <a href="states/az.html">Arizona</a>
+          <a href="states/ar.html">Arkansas</a>
+          <a href="states/ca.html">California</a>
+          <a href="states/co.html">Colorado</a>
+          <a href="states/ct.html">Connecticut</a>
+          <a href="states/de.html">Delaware</a>
+          <a href="states/fl.html">Florida</a>
+          <a href="states/ga.html">Georgia</a>
+          <a href="states/hi.html">Hawaii</a>
+          <a href="states/id.html">Idaho</a>
+          <a href="states/il.html">Illinois</a>
+          <a href="states/in.html">Indiana</a>
+          <a href="states/ia.html">Iowa</a>
+          <a href="states/ks.html">Kansas</a>
+          <a href="states/ky.html">Kentucky</a>
+          <a href="states/la.html">Louisiana</a>
+          <a href="states/me.html">Maine</a>
+          <a href="states/md.html">Maryland</a>
+          <a href="states/ma.html">Massachusetts</a>
+          <a href="states/mi.html">Michigan</a>
+          <a href="states/mn.html">Minnesota</a>
+          <a href="states/ms.html">Mississippi</a>
+          <a href="states/mo.html">Missouri</a>
+          <a href="states/mt.html">Montana</a>
+          <a href="states/ne.html">Nebraska</a>
+          <a href="states/nv.html">Nevada</a>
+          <a href="states/nh.html">New Hampshire</a>
+          <a href="states/nj.html">New Jersey</a>
+          <a href="states/nm.html">New Mexico</a>
+          <a href="states/ny.html">New York</a>
+          <a href="states/nc.html">North Carolina</a>
+          <a href="states/nd.html">North Dakota</a>
+          <a href="states/oh.html">Ohio</a>
+          <a href="states/ok.html">Oklahoma</a>
+          <a href="states/or.html">Oregon</a>
+          <a href="states/pa.html">Pennsylvania</a>
+          <a href="states/ri.html">Rhode Island</a>
+          <a href="states/sc.html">South Carolina</a>
+          <a href="states/sd.html">South Dakota</a>
+          <a href="states/tn.html">Tennessee</a>
+          <a href="states/tx.html">Texas</a>
+          <a href="states/ut.html">Utah</a>
+          <a href="states/vt.html">Vermont</a>
+          <a href="states/va.html">Virginia</a>
+          <a href="states/wa.html">Washington</a>
+          <a href="states/wv.html">West Virginia</a>
+          <a href="states/wi.html">Wisconsin</a>
+          <a href="states/wy.html">Wyoming</a>
+      </nav>
+
+      <h2>Read the analysis</h2>
+      <ul class="article-links">
+        <li><a href="articles/119th-congress-by-the-numbers.html">The 119th Congress by the numbers</a></li>
+        <li><a href="articles/house-members-who-miss-the-most-votes.html">House members who miss the most votes</a></li>
+        <li><a href="articles/senators-who-miss-the-most-votes.html">Senators who miss the most votes</a></li>
+        <li><a href="articles/bills-that-became-law.html">Every bill that became law, by subject</a></li>
+        <li><a href="articles/state-delegations-ranked.html">How each state's delegation scored</a></li>
+        <li><a href="articles/how-to-read-a-report-card.html">How to read a congressional report card</a></li>
+      </ul>
+      <p><a href="articles/">All articles</a></p>
+    </section>
   </main>
 
   <footer class="site-footer">
     <div class="wrap">
       <nav aria-label="Site">
         <a href="./">All members</a>
+        <a href="states/">States</a>
+        <a href="articles/">Articles</a>
         <a href="digest/">Weekly digest</a>
         <a href="methodology.html">Methodology</a>
+        <a href="about.html">About</a>
         <a href="privacy.html">Privacy policy</a>
+        <a href="terms.html">Terms</a>
         <a href="contact.html">Contact</a>
       </nav>
       <p>Congress Report Card is an independent project. It is not affiliated with Congress, any party or any campaign.</p>

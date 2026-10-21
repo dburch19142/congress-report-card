@@ -24,7 +24,7 @@ from html import escape
 
 from build_data import OUT as DATA_FILE, ROOT
 from build_pages import (ADSENSE_SNIPPET, PARTY, SITE, SITE_URL, compute_grades, district, footer,
-                         plural, write)
+                         plural, site_header, write)
 
 SNAPSHOT = ROOT / "digest_snapshot.json"
 OUT_DIR = SITE / "digest"
@@ -182,9 +182,7 @@ def digest_page(body, title, end):
   {ADSENSE_SNIPPET}
 </head>
 <body>
-  <header class="masthead slim">
-    <div class="wrap"><a class="home" href="../">Congress Report Card</a></div>
-  </header>
+  {site_header("../")}
 
   <main class="wrap page prose">
     <section class="send-tools" id="send-tools" hidden>

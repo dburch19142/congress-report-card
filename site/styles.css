@@ -167,11 +167,43 @@ a.button { font-size: 14px; color: var(--ink); background: var(--surface); borde
 .ad-slot.on { margin: 20px 0; min-height: 100px; text-align: center; }
 .ad-label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 4px; }
 
+/* Main menu */
+.bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; }
+.topnav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 15px; }
+.topnav a { color: var(--ink); text-decoration: none; padding: 2px 0; border-bottom: 2px solid transparent; }
+.topnav a:hover, .topnav a[aria-current=page] { border-bottom-color: var(--accent); }
+.home-nav { margin: -16px 0 24px; }
+
+/* Member page comparisons, state and article pages */
+.compare { margin-top: 8px; }
+.compare p { font-size: 15px; margin: 0 0 10px; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.prose table.members-table { font-size: 14px; width: 100%; }
+.members-table td { white-space: nowrap; }
+.members-table td:first-child { white-space: normal; min-width: 150px; }
+.article-list { list-style: none; padding: 0; margin: 24px 0 0; }
+.article-list li { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.article-list li > a { font-family: Georgia, serif; font-size: 20px; font-weight: 700; text-decoration: none; }
+.article-list .date { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+.article-list p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+.article .lede { font-size: 18px; }
+.more { margin-top: 32px; border-top: 1px solid var(--line); }
+
+/* Home page: about, states and articles */
+.explore { margin: 0 0 24px; padding-top: 24px; border-top: 1px solid var(--line); max-width: 860px; }
+.explore h2 { font-family: Georgia, serif; font-size: 21px; margin: 24px 0 8px; }
+.explore h2:first-child { margin-top: 0; }
+.explore p { font-size: 15px; margin: 0 0 10px; }
+.state-links { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 4px 16px; font-size: 14px; }
+.article-links { margin: 0 0 8px; padding-left: 20px; font-size: 15px; }
+.article-links li { margin: 4px 0; }
+
 .site-footer { border-top: 1px solid var(--line); margin-top: 40px; padding: 24px 0 40px; font-size: 14px; color: var(--muted); }
 .site-footer nav { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 8px; }
 .site-footer p { margin: 0; }
 
 @media (max-width: 600px) {
+  .topnav { gap: 4px 14px; font-size: 14px; }
   .profile { padding: 16px; }
   .summary { grid-template-columns: repeat(5, 1fr); gap: 4px; }
   .summary button { padding: 8px; }
