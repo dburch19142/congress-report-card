@@ -122,6 +122,54 @@ laid out around TikTok's buttons that shows the `congressreportcard.org/tiktok` 
 videos and the music file are not committed. Run it again after a data update to refresh the
 numbers.
 
+## Load test (JMeter)
+
+`tests/congress-report-card.jmx` is an [Apache JMeter](https://jmeter.apache.org) 5.6 test plan for
+the live site. It needs Java 8 or later. To run it and write an HTML report:
+
+```powershell
+jmeter -n -t tests/congress-report-card.jmx -l results.jtl -e -o jmeter-report
+```
+
+Delete `results.jtl` and `jmeter-report/` before running again; JMeter won't overwrite them. The
+plan runs three stages in order:
+
+1. **Setup** reads the member IDs from `/sitemap.xml`, so the test follows the current roster.
+2. **Smoke checks** run once: `robots.txt`, the digest RSS feed, a grade badge, the `/tiktok` short
+   link, a 404 for an unknown page, and the `http` → `https` and `www` → bare-domain redirects.
+3. **Visitors** open the home page and 1 to 3 random member pages, and sometimes the methodology,
+   digest, privacy and contact pages. A page fails if its title is wrong or it takes too long with
+   its CSS, scripts and images.
+
+Only files from the site's own domain are downloaded, so the test sends no traffic to the ads,
+visitor counter or email sign-up scripts. The defaults are light because the site is on GitHub
+Pages. Change them with `-J`:
+
+| Setting    | Default                  | Meaning                                                                 |
+|------------|--------------------------|-------------------------------------------------------------------------|
+| `users`    | 5                        | Concurrent visitors                                                     |
+| `rampup`   | 30                       | Seconds to reach full load                                              |
+| `duration` | 120                      | Seconds the load runs for                                               |
+| `think`    | 1000                     | Shortest pause between pages, in ms; up to 3 seconds is added at random |
+| `maxms`    | 5000                     | A page slower than this, in ms, fails                                   |
+| `allpages` | 0 (off)                  | Threads that request every page in the sitemap once                     |
+| `host`     | `congressreportcard.org` | Site to test                                                            |
+| `port`     | none                     | Port, for a local copy                                                  |
+| `protocol` | `https`                  | `http` for a local copy                                                 |
+
+To check every page in the sitemap once, without the visitor load:
+
+```powershell
+jmeter -n -t tests/congress-report-card.jmx -Jallpages=3 -Jusers=0 -l results-all-pages.jtl -e -o jmeter-report-all-pages
+```
+
+For heavier load, test a local copy instead of the live site (the redirect checks are skipped):
+
+```powershell
+python -m http.server 8000 --directory site
+jmeter -n -t tests/congress-report-card.jmx -Jprotocol=http -Jhost=localhost -Jport=8000 -Jusers=50 -l results.jtl
+```
+
 ## Ask a question about a member
 
 `ask.py` answers plain-English questions from the same data, using Claude:
