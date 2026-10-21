@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:congress_report_card/api.dart';
+import 'package:congress_report_card/articles.dart';
+import 'package:congress_report_card/compare.dart';
 import 'package:congress_report_card/digest.dart';
 import 'package:congress_report_card/grading.dart';
 import 'package:congress_report_card/main.dart';
@@ -116,6 +118,17 @@ class FakeData implements ReportData {
 
   @override
   Future<Digest> digest({bool refresh = false}) async => Digest.fromFeed(_feed);
+
+  @override
+  Future<List<Article>> articles({bool refresh = false}) async =>
+      Article.listFromJson([
+        {
+          'title': 'How each state scored',
+          'description': 'Delegations ranked by average score.',
+          'date': '2026-10-21',
+          'url': 'https://congressreportcard.org/articles/states.html',
+        },
+      ]);
 }
 
 // A 1×1 transparent PNG. The test binding answers every HTTP request with
@@ -345,6 +358,42 @@ void main() {
     });
   });
 
+  group('comparisons', () {
+    test('rank members within their chamber, party and state', () async {
+      final store = ReportStore(FakeData());
+      await store.load();
+      final compare = store.compare;
+      // Alaska: Charlie alone (85.0). Georgia: 100, 94.7, 43.3 and 30.0.
+      expect(compare.states, ['AK', 'GA']);
+      expect(count(4526), '4,526');
+      expect(count(999), '999');
+      expect(compare.average('GA'), closeTo(67.0, 0.1));
+
+      final alpha = compare.about(store.byId('A000001')!);
+      expect(
+          alpha[0],
+          "Alpha's overall score of 100 ranks 1st of 3 House members, in the "
+          'top 33%. The median score in the House is 85.');
+      expect(
+          alpha[1],
+          'Georgia has 4 members of Congress (2 senators and 2 '
+          'representatives). Their average score is 67, a D+. Alpha has the '
+          '1st-highest score in the delegation.');
+      // The typical House member leaves out Charlie, who has a partial term.
+      expect(alpha[2],
+          contains('5.0 points above the typical House member (95.0%)'));
+      expect(alpha[3], contains("Of Alpha's bills, 1 became law."));
+
+      final bravo = compare.about(store.byId('B000002')!);
+      expect(bravo[1], contains('the highest is Ann Alpha, with an A'));
+
+      final georgia = compare.aboutState('GA');
+      expect(
+          georgia[0], contains('2 Democrats, 1 Republican and 1 independent'));
+      expect(georgia[1], contains('ranks Georgia 2nd of the 2 states'));
+    });
+  });
+
   group('screens', () {
     Future<void> pumpApp(WidgetTester tester) async {
       HttpOverrides.global = _PhotoOverrides();
@@ -402,7 +451,9 @@ void main() {
       await pumpApp(tester);
       expect(_gradeOf(tester, 'Dee Delta'), 'A');
 
-      await tester.tap(find.text('Grading'));
+      await tester.tap(find.text('More'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Adjust grading'));
       await tester.pumpAndSettle();
       await tester.drag(find.byType(Slider).first, const Offset(1000, 0));
       await tester.pumpAndSettle();
@@ -411,6 +462,8 @@ void main() {
         [100, 0, 0],
       );
 
+      await tester.pageBack();
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Members'));
       await tester.pumpAndSettle();
       expect(_gradeOf(tester, 'Dee Delta'), 'B');
@@ -440,9 +493,44 @@ void main() {
       expect(find.textContaining('missed 40'), findsOneWidget);
     });
 
-    testWidgets('about shows when the data was updated', (tester) async {
+    testWidgets('a report card compares the member with their state',
+        (tester) async {
       await pumpApp(tester);
-      await tester.tap(find.text('About'));
+      await tester.tap(find.text('Ann Alpha'));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('How Alpha compares'), 300);
+      await tester.scrollUntilVisible(
+          find.text('See the Georgia delegation'), 300);
+      await tester.tap(find.text('See the Georgia delegation'));
+      await tester.pumpAndSettle();
+      expect(find.text('Every member from Georgia'), findsOneWidget);
+    });
+
+    testWidgets('states are ranked and open their delegation', (tester) async {
+      await pumpApp(tester);
+      await tester.tap(find.text('States'));
+      await tester.pumpAndSettle();
+      expect(find.text('4 members · average 67.0'), findsOneWidget);
+      expect(find.text('1 member · average 85.0'), findsOneWidget);
+
+      await tester.tap(find.text('Georgia'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Georgia sends 4 members'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('Ed Echo'), 200);
+      expect(find.text('Ann Alpha'), findsOneWidget);
+    });
+
+    testWidgets('articles are listed with their date', (tester) async {
+      await pumpApp(tester);
+      await tester.tap(find.text('Articles'));
+      await tester.pumpAndSettle();
+      expect(find.text('How each state scored'), findsOneWidget);
+      expect(find.text('October 21, 2026'), findsOneWidget);
+    });
+
+    testWidgets('more shows when the data was updated', (tester) async {
+      await pumpApp(tester);
+      await tester.tap(find.text('More'));
       await tester.pumpAndSettle();
       expect(find.text('Updated 2026-10-07 16:22 UTC.'), findsOneWidget);
       expect(find.text('119th Congress · 2025–2027'), findsOneWidget);

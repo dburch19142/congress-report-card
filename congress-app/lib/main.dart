@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'api.dart';
 import 'colors.dart';
 import 'screens/about_screen.dart';
+import 'screens/articles_screen.dart';
 import 'screens/digest_screen.dart';
-import 'screens/grading_screen.dart';
 import 'screens/members_screen.dart';
+import 'screens/states_screen.dart';
 import 'store.dart';
 
 void main() {
@@ -72,8 +73,9 @@ class _HomeShellState extends State<HomeShell> {
         index: _tab,
         children: [
           MembersScreen(store: _store),
+          StatesScreen(store: _store),
+          ArticlesScreen(store: _store),
           DigestScreen(store: _store),
-          GradingScreen(store: _store),
           AboutScreen(store: _store),
         ],
       ),
@@ -87,18 +89,23 @@ class _HomeShellState extends State<HomeShell> {
             label: 'Members',
           ),
           NavigationDestination(
+            icon: Icon(Icons.map_outlined),
+            selectedIcon: Icon(Icons.map),
+            label: 'States',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.menu_book_outlined),
+            selectedIcon: Icon(Icons.menu_book),
+            label: 'Articles',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.article_outlined),
             selectedIcon: Icon(Icons.article),
             label: 'Digest',
           ),
           NavigationDestination(
-            icon: Icon(Icons.tune),
-            label: 'Grading',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.info_outline),
-            selectedIcon: Icon(Icons.info),
-            label: 'About',
+            icon: Icon(Icons.more_horiz),
+            label: 'More',
           ),
         ],
       ),

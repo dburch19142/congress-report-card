@@ -21,7 +21,7 @@ class MembersScreen extends StatefulWidget {
 
 class _MembersScreenState extends State<MembersScreen> {
   final _search = TextEditingController();
-  late Future<void> _future = widget.store.load();
+  late Future<void> _future = widget.store.ensureLoaded();
 
   String _query = '';
   String _chamber = '';

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import 'articles.dart';
 import 'digest.dart';
 import 'models.dart';
 
@@ -13,6 +14,7 @@ abstract class ReportData {
   /// ZIP code → the districts it covers, e.g. `{'01007': ['MA1', 'MA2']}`.
   Future<Map<String, List<String>>> zipDistricts();
   Future<Digest> digest({bool refresh = false});
+  Future<List<Article>> articles({bool refresh = false});
 }
 
 /// Reads the data files congressreportcard.org publishes for its own pages,
@@ -34,6 +36,7 @@ class ReportApi implements ReportData {
   Report? _report;
   Map<String, List<String>>? _zips;
   Digest? _digest;
+  List<Article>? _articles;
 
   Future<String> _get(String path) async {
     final response = await _client
@@ -65,6 +68,13 @@ class ReportApi implements ReportData {
   Future<Digest> digest({bool refresh = false}) async {
     if (_digest != null && !refresh) return _digest!;
     return _digest = Digest.fromFeed(await _get('/digest/feed.xml'));
+  }
+
+  @override
+  Future<List<Article>> articles({bool refresh = false}) async {
+    if (_articles != null && !refresh) return _articles!;
+    return _articles = Article.listFromJson(
+        jsonDecode(await _get('/articles/articles.json')) as List<dynamic>);
   }
 }
 

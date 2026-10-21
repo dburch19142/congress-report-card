@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api.dart';
+import 'compare.dart';
 import 'grading.dart';
 import 'models.dart';
 
@@ -51,10 +52,22 @@ class ReportStore extends ChangeNotifier {
   List<Graded> graded = const [];
   Map<String, Graded> _byId = const {};
 
+  /// Rankings by chamber, party and state for the current weights.
+  Comparisons compare = Comparisons(const []);
+
   ZipState zipState = ZipState.idle;
   Map<String, List<String>> _zips = const {};
 
   Graded? byId(String id) => _byId[id];
+
+  Future<void>? _firstLoad;
+
+  /// The first load, shared by every tab that needs the members. A failed
+  /// load is forgotten so the next call tries again.
+  Future<void> ensureLoaded() => _firstLoad ??= load().catchError((Object e) {
+        _firstLoad = null;
+        throw e;
+      });
 
   Future<void> load({bool refresh = false}) async {
     final loaded = await data.report(refresh: refresh);
@@ -66,6 +79,7 @@ class ReportStore extends ChangeNotifier {
   void _regrade() {
     graded = gradeMembers(report?.members ?? const [], weights);
     _byId = {for (final g in graded) g.member.id: g};
+    compare = Comparisons(graded);
     notifyListeners();
   }
 

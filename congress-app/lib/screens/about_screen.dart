@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../store.dart';
 import '../widgets.dart';
+import 'grading_screen.dart';
 
 const _site = 'https://congressreportcard.org';
 
-/// Where the data comes from, when it was last updated and the site's
-/// methodology, privacy and contact pages.
+/// The More tab: the grading weights, where the data comes from, when it was
+/// last updated and the site's methodology, privacy and contact pages.
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key, required this.store});
 
@@ -16,13 +17,26 @@ class AboutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: AppBar(title: const Text('About')),
+      appBar: AppBar(title: const Text('More')),
       body: ListenableBuilder(
         listenable: store,
         builder: (context, _) {
           final report = store.report;
           return ListView(
             children: [
+              ListTile(
+                leading: const Icon(Icons.tune),
+                title: const Text('Adjust grading'),
+                subtitle:
+                    const Text('Choose how much each part of the grade counts'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => GradingScreen(store: store),
+                  ),
+                ),
+              ),
+              const Divider(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: Column(
@@ -53,7 +67,9 @@ class AboutScreen extends StatelessWidget {
               const Divider(),
               const _Link('congressreportcard.org', _site),
               const _Link('Methodology', '$_site/methodology.html'),
+              const _Link('About the project', '$_site/about.html'),
               const _Link('Privacy policy', '$_site/privacy.html'),
+              const _Link('Terms of use', '$_site/terms.html'),
               const _Link('Contact', '$_site/contact.html'),
               const Divider(),
               Padding(

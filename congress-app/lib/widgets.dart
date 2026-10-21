@@ -284,9 +284,12 @@ void openMember(BuildContext context, ReportStore store, String id) {
   );
 }
 
-/// Opens a web page in the browser.
-Future<void> openUrl(String url) async {
+/// Opens a web page in the browser, or with [inApp] in a browser view over
+/// the app (Safari View Controller on iPhone).
+Future<void> openUrl(String url, {bool inApp = false}) async {
   final uri = Uri.tryParse(url);
   if (uri == null) return;
-  await launchUrl(uri, mode: LaunchMode.externalApplication);
+  await launchUrl(uri,
+      mode:
+          inApp ? LaunchMode.inAppBrowserView : LaunchMode.externalApplication);
 }

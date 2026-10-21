@@ -6,6 +6,7 @@ import '../grading.dart';
 import '../models.dart';
 import '../store.dart';
 import '../widgets.dart';
+import 'states_screen.dart';
 
 const _noBills = 'Bill data is not available yet.';
 
@@ -168,6 +169,7 @@ class MemberScreen extends StatelessWidget {
               onTap: () => openUrl(bill.url),
             ),
         ],
+        ..._comparison(context, g),
         const Divider(height: 32),
         _LinkTile('Report card page, sharing and badge', m.reportCardUrl),
         _LinkTile('Full record on Congress.gov', m.congressGovUrl),
@@ -175,6 +177,35 @@ class MemberScreen extends StatelessWidget {
           _LinkTile('Official website', m.url!),
       ],
     );
+  }
+}
+
+extension on MemberScreen {
+  /// How the member compares with their chamber, party and state.
+  List<Widget> _comparison(BuildContext context, Graded g) {
+    final paragraphs = store.compare.about(g);
+    if (paragraphs.isEmpty) return const [];
+    final state = g.member.state;
+    return [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(0, 16, 0, 4),
+        child: Text('How ${g.member.last} compares',
+            style: Theme.of(context).textTheme.titleMedium),
+      ),
+      for (final p in paragraphs)
+        Padding(padding: const EdgeInsets.only(top: 8), child: Text(p)),
+      if (!delegateStates.contains(state))
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton(
+            style: TextButton.styleFrom(padding: EdgeInsets.zero),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => StateScreen(store: store, state: state),
+            )),
+            child: Text('See the ${stateName(state)} delegation'),
+          ),
+        ),
+    ];
   }
 }
 
