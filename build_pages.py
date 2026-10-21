@@ -811,6 +811,10 @@ def main():
     for a in articles:
         write(SITE / "articles" / f"{a['slug']}.html", article_page(a, articles, members))
     write(SITE / "articles" / "index.html", articles_index(articles))
+    # The same list for the mobile app, newest first.
+    write(SITE / "articles" / "articles.json", json.dumps([
+        {"title": x["title"], "description": x["description"], "date": x["date"],
+         "url": f"{SITE_URL}/articles/{x['slug']}.html"} for x in articles], indent=1) + "\n")
     print(f"Wrote {len(articles)} articles")
 
     write(SITE / "sitemap.xml", sitemap(members, data["generated"], states, articles))

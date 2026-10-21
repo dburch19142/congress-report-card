@@ -73,7 +73,8 @@ Each file in `articles/` is one article: a JSON header in an HTML comment (`titl
 then the article body as HTML. `build_pages.py` wraps it in the site's header and footer, lists it
 on `articles/`, and adds it to the sitemap. Write `[[Member Name]]` with the name exactly as it is
 in `members.js` to link to that member's page; if the member has left Congress it becomes plain
-text. Articles quote figures as of their date and are not updated with the nightly data.
+text. Articles quote figures as of their date and are not updated with the nightly data. The list
+of articles is also written to `articles/articles.json` for the mobile app.
 
 ## Weekly digest and email sign-up
 
