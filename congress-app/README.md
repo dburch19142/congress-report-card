@@ -95,45 +95,39 @@ The iOS build needs Xcode and CocoaPods, so it has to be done on a Mac.
   proves the app compiles with Xcode; the unsigned `Runner.app` is kept as a
   run artifact for a week. It can't be installed on a phone.
 
-To send a build to TestFlight, open **Actions → iOS app → Run workflow**,
-tick **Upload to TestFlight** and run it. The **testflight** job signs the
-app and uploads it to App Store Connect. The build number is the workflow's
-run number, so every upload is newer than the last. It needs these
-repository secrets (**Settings → Secrets and variables → Actions**):
+## Send a build to TestFlight
 
-| Secret | What it is |
-|---|---|
-| `APPLE_TEAM_ID` | The 10-character Team ID from **Membership details** at developer.apple.com |
-| `IOS_DISTRIBUTION_CERT_P12_BASE64` | The Apple Distribution certificate and its private key as a `.p12`, base64-encoded |
-| `IOS_DISTRIBUTION_CERT_PASSWORD` | The password chosen when making the `.p12` |
-| `IOS_PROVISIONING_PROFILE_BASE64` | An App Store provisioning profile for the app's bundle identifier, base64-encoded |
-| `APP_STORE_CONNECT_KEY_ID` | The Key ID of an App Store Connect API key (role: App Manager) |
-| `APP_STORE_CONNECT_ISSUER_ID` | The Issuer ID shown above the list of API keys |
-| `APP_STORE_CONNECT_PRIVATE_KEY` | The full text of the key's `.p8` file, including the BEGIN and END lines |
+The **testflight** job signs the app and uploads it to App Store Connect. It
+uses Xcode's automatic signing with an App Store Connect API key, the same
+way as the GHSA football app, so no certificates or profiles are stored.
 
-Making them without a Mac (Git Bash has `openssl` and `base64`):
+Once:
 
-1. In App Store Connect, create the app with the bundle identifier
-   `org.congressreportcard.congressReportCard` (register it first under
-   **Certificates, Identifiers & Profiles → Identifiers** if it isn't listed).
-2. Make a key and a certificate signing request:
-   `openssl req -new -newkey rsa:2048 -nodes -keyout dist.key -out dist.csr -subj "/CN=Congress Report Card"`.
-   Upload `dist.csr` under **Certificates → + → Apple Distribution** and
-   download `distribution.cer`.
-3. Combine them into a `.p12`:
-   `openssl x509 -inform DER -in distribution.cer -out dist.pem` then
-   `openssl pkcs12 -export -legacy -inkey dist.key -in dist.pem -out dist.p12`
-   (choose a password; it is `IOS_DISTRIBUTION_CERT_PASSWORD`).
-4. Under **Profiles → + → App Store Connect**, make a profile for the app's
-   identifier with that certificate, and download it.
-5. Under **Users and Access → Integrations → App Store Connect API**, make a
-   key and download the `.p8` (it can only be downloaded once).
-6. Encode the two files for the secrets: `base64 -w0 dist.p12` and
-   `base64 -w0 <profile>.mobileprovision`.
+1. In App Store Connect, create the app (**Apps → + → New App**) with the
+   bundle ID `org.congressreportcard.congressReportCard`. Register the
+   bundle ID first under **Certificates, Identifiers & Profiles →
+   Identifiers** if it isn't in the list.
+2. Add four repository secrets in **Settings → Secrets and variables →
+   Actions**. The API key can be the same one the GHSA football app uses;
+   it belongs to the Apple account, not to one app.
 
-Keep `dist.key`, `dist.p12` and the `.p8` somewhere safe and out of this
-repository. The certificate and profile expire after a year; make new ones
-and update the secrets when they do.
+   | Secret | What it is |
+   |---|---|
+   | `APPLE_TEAM_ID` | The 10-character Team ID (developer.apple.com → Account → Membership details) |
+   | `APP_STORE_CONNECT_KEY_ID` | The API key's Key ID |
+   | `APP_STORE_CONNECT_ISSUER_ID` | The Issuer ID shown above the list of keys |
+   | `APP_STORE_CONNECT_API_KEY_P8` | The full text of `AuthKey_<KeyID>.p8`, including the BEGIN and END lines |
+
+   The key is made under **Users and Access → Integrations → App Store
+   Connect API** and needs the **Admin** role, because automatic signing
+   creates the distribution certificate. Its `.p8` file can only be
+   downloaded once.
+
+Each build: **Actions → iOS app → Run workflow**, tick **Upload to
+TestFlight**, **Run workflow**. The version comes from `pubspec.yaml`; the
+build number is the workflow's run number, so it always goes up. Apple
+processes the build for a few minutes to an hour before it shows in
+TestFlight.
 
 ## App Store listing
 

@@ -4,8 +4,15 @@
 # build       every change to the app: an unsigned release build for iPhone, which proves the
 #             app compiles with Xcode. The unsigned Runner.app is kept as an artifact for a week.
 # testflight  only when started by hand from the Actions tab with "Upload to TestFlight" ticked.
-#             Signs the app and uploads it to App Store Connect. Needs the Apple secrets listed in
-#             congress-app/README.md.
+#             Signs the app and uploads it to App Store Connect.
+#
+# Signing is Xcode's automatic signing driven by an App Store Connect API key with the Admin
+# role, so no certificates or profiles are stored here. It works the same way as the GHSA
+# football app's TestFlight workflow. Repository secrets:
+#   APPLE_TEAM_ID                   10-character team ID (developer.apple.com > Membership)
+#   APP_STORE_CONNECT_KEY_ID        the API key's Key ID
+#   APP_STORE_CONNECT_ISSUER_ID     the Issuer ID shown above the key list
+#   APP_STORE_CONNECT_API_KEY_P8    the full contents of AuthKey_<KeyID>.p8
 name: iOS app
 
 on:
@@ -40,9 +47,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: 3.47.7
           channel: stable
           cache: true
-      - run: flutter --version
       - run: flutter pub get
       - run: flutter test
 
@@ -53,11 +60,16 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      # App Store Connect only accepts builds from a recent Xcode, so use the newest one installed.
+      - name: Select newest Xcode
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
+          xcodebuild -version
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: 3.47.7
           channel: stable
           cache: true
-      - run: xcodebuild -version
       - run: flutter pub get
       - name: Build for iPhone without signing
         run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }}
@@ -73,112 +85,75 @@ jobs:
     needs: test
     if: ${{ inputs.testflight }}
     runs-on: macos-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     env:
       TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      CERT_P12: ${{ secrets.IOS_DISTRIBUTION_CERT_P12_BASE64 }}
-      CERT_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}
-      PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
-      ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-      ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-      ASC_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+      KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
+      # TestFlight needs a build number above every earlier upload.
+      BUILD_NUMBER: ${{ github.run_number }}
     steps:
       - name: Check the Apple secrets are set
+        working-directory: .
         run: |
           missing=""
-          for name in TEAM_ID CERT_P12 CERT_PASSWORD PROFILE ASC_KEY_ID ASC_ISSUER_ID ASC_PRIVATE_KEY; do
+          for name in TEAM_ID KEY_ID ISSUER_ID API_KEY_P8; do
             [ -n "${!name}" ] || missing="$missing $name"
           done
           if [ -n "$missing" ]; then
-            echo "::error::Missing secrets:$missing. See 'Build in GitHub Actions' in congress-app/README.md."
+            echo "::error::Missing secrets:$missing. See 'Send a build to TestFlight' in congress-app/README.md."
             exit 1
           fi
-        working-directory: .
       - uses: actions/checkout@v4
+      - name: Select newest Xcode
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
+          xcodebuild -version
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: 3.47.7
           channel: stable
           cache: true
-      - run: xcodebuild -version
       - run: flutter pub get
 
-      - name: Install the distribution certificate and provisioning profile
+      - name: Write API key
         run: |
-          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
-          KEYCHAIN_PASSWORD="$(uuidgen)"
-          echo "$CERT_P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
-          echo "$PROFILE" | base64 --decode > "$RUNNER_TEMP/profile.mobileprovision"
+          mkdir -p "$RUNNER_TEMP/keys"
+          printf '%s' "$API_KEY_P8" > "$RUNNER_TEMP/keys/AuthKey.p8"
 
-          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
-          security set-keychain-settings -lut 21600 "$KEYCHAIN"
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
-          security import "$RUNNER_TEMP/cert.p12" -P "$CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
-          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN" > /dev/null
-          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+      - name: Prepare Xcode project
+        run: flutter build ios --config-only --release --no-codesign --build-number="$BUILD_NUMBER"
 
-          security cms -D -i "$RUNNER_TEMP/profile.mobileprovision" > "$RUNNER_TEMP/profile.plist"
-          UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$RUNNER_TEMP/profile.plist")
-          NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' "$RUNNER_TEMP/profile.plist")
-          for dir in "$HOME/Library/MobileDevice/Provisioning Profiles" \
-                     "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"; do
-            mkdir -p "$dir"
-            cp "$RUNNER_TEMP/profile.mobileprovision" "$dir/$UUID.mobileprovision"
-          done
-          APP_ID=$(/usr/libexec/PlistBuddy -c 'Print :Entitlements:application-identifier' "$RUNNER_TEMP/profile.plist")
-          echo "PROFILE_NAME=$NAME" >> "$GITHUB_ENV"
-          echo "BUNDLE_ID=${APP_ID#*.}" >> "$GITHUB_ENV"
-
-      # Manual signing for the Runner target only. Setting it for the whole build would also
-      # apply it to the CocoaPods targets, which can't take a provisioning profile.
-      - name: Switch the app target to manual signing
+      - name: Archive
         run: |
-          ruby -rxcodeproj -e '
-            project = Xcodeproj::Project.open("ios/Runner.xcodeproj")
-            target = project.targets.find { |t| t.name == "Runner" }
-            target.build_configurations.each do |config|
-              s = config.build_settings
-              s["CODE_SIGN_STYLE"] = "Manual"
-              s["DEVELOPMENT_TEAM"] = ENV["TEAM_ID"]
-              s["PROVISIONING_PROFILE_SPECIFIER"] = ENV["PROFILE_NAME"]
-              s["CODE_SIGN_IDENTITY"] = "Apple Distribution"
-              s["CODE_SIGN_IDENTITY[sdk=iphoneos*]"] = "Apple Distribution"
-            end
-            project.save'
+          xcodebuild archive \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/Runner.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey.p8" \
+            -authenticationKeyID "$KEY_ID" \
+            -authenticationKeyIssuerID "$ISSUER_ID" \
+            DEVELOPMENT_TEAM="$TEAM_ID" \
+            CODE_SIGN_STYLE=Automatic
 
-      - name: Build the signed IPA
+      - name: Export and upload to TestFlight
         run: |
-          cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key><string>app-store-connect</string>
-            <key>teamID</key><string>$TEAM_ID</string>
-            <key>signingStyle</key><string>manual</string>
-            <key>provisioningProfiles</key>
-            <dict><key>$BUNDLE_ID</key><string>$PROFILE_NAME</string></dict>
-            <key>uploadSymbols</key><true/>
-          </dict>
-          </plist>
-          EOF
-          flutter build ipa --release --build-number ${{ github.run_number }} \
-            --export-options-plist="$RUNNER_TEMP/ExportOptions.plist"
+          sed "s/TEAM_ID_PLACEHOLDER/$TEAM_ID/" ios/ExportOptions.plist > "$RUNNER_TEMP/ExportOptions.plist"
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/Runner.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey.p8" \
+            -authenticationKeyID "$KEY_ID" \
+            -authenticationKeyIssuerID "$ISSUER_ID"
+          echo "Uploaded build $BUILD_NUMBER to App Store Connect." >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload to TestFlight
-        run: |
-          mkdir -p "$HOME/.appstoreconnect/private_keys"
-          echo "$ASC_PRIVATE_KEY" > "$HOME/.appstoreconnect/private_keys/AuthKey_$ASC_KEY_ID.p8"
-          xcrun altool --upload-app --type ios --file build/ios/ipa/*.ipa \
-            --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: ios-ipa-${{ github.run_number }}
-          path: congress-app/build/ios/ipa/*.ipa
-          retention-days: 7
-
-      - name: Remove the signing keychain
-        if: ${{ always() }}
-        run: security delete-keychain "$RUNNER_TEMP/signing.keychain-db" || true
+      - name: Remove API key
+        if: always()
         working-directory: .
+        run: rm -rf "$RUNNER_TEMP/keys"
