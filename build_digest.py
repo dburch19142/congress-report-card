@@ -23,7 +23,7 @@ from email.utils import format_datetime
 from html import escape
 
 from build_data import OUT as DATA_FILE, ROOT
-from build_pages import (ADSENSE_SNIPPET, PARTY, SITE, SITE_URL, compute_grades, district, footer,
+from build_pages import (ADSENSE_SNIPPET, GA_SNIPPET, PARTY, SITE, SITE_URL, compute_grades, district, footer,
                          plural, site_header, write)
 
 SNAPSHOT = ROOT / "digest_snapshot.json"
@@ -170,6 +170,7 @@ def digest_page(body, title, end):
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  {GA_SNIPPET}
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title} | Congress Report Card</title>
   <meta name="description" content="Weekly digest for the week ending {long_date(end)}: missed votes, grade changes and bills that became law.">

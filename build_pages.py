@@ -37,6 +37,18 @@ ADSENSE_PUBLISHER = "pub-7873162278456307"
 ADSENSE_SNIPPET = (f'<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
                    f'?client=ca-{ADSENSE_PUBLISHER}"\n     crossorigin="anonymous"></script>')
 
+# Google Analytics. The same tag is at the top of the <head> of the hand-written pages in site/.
+GA_MEASUREMENT_ID = "G-1LC6H8F1MB"
+GA_SNIPPET = f"""<!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+
+    gtag('config', '{GA_MEASUREMENT_ID}');
+  </script>"""
+
 # ---------------------------------------------------------------- grading (mirrors app.js)
 GRADING = {
     "weights": {"attendance": 40, "sponsored": 35, "cosponsored": 25},
@@ -459,6 +471,7 @@ def member_page(m, data, ctx):
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  {GA_SNIPPET}
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{e(title)}</title>
   <meta name="description" content="{e(description)}">
@@ -560,6 +573,7 @@ def page_shell(prefix, path, title, description, body, ad=True, robots=""):
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  {GA_SNIPPET}
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)} | Congress Report Card</title>
   <meta name="description" content="{escape(description)}">
